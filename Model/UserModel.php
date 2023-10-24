@@ -36,6 +36,10 @@ class UserModel extends Database
         return (count($result) == 0);
     }
 
-    
+    public function deleteRating($id)
+    {
+        return $this->delete("DELETE FROM ratings WHERE id = ?", ["i", $id]);
+    }
+
 }
 ?>

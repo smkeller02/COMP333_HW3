@@ -1,11 +1,6 @@
 <?php
 class Database
 {
-    function log($message) {
-        $log_file = "/Applications/XAMPP/logs/HW3debugging-log.log";
-        error_log($message . "\n", 3, $log_file);
-    }
-
     protected $connection = null;
     public function __construct()
     {
@@ -44,16 +39,26 @@ class Database
         }
     }
     
+    public function delete($query = "" , $params = [])
+    {
+        try {
+            $stmt = $this->executeStatement( $query , $params );
+            $stmt->get_result();
+            $stmt->close();
+            return true; //ASSUMES SUCCESSFUL DELETE
+        } catch(Exception $e) {
+            throw New Exception( $e->getMessage() );
+        }
+    }
+
     private function executeStatement($query = "" , $params = [])
     {
         try {
-            $this->log("executeStatement");
             $stmt = $this->connection->prepare( $query );
             if($stmt === false) {
                 throw New Exception("Unable to do prepared statement: " . $query);
             }
             if( $params ) {
-                $this->log($query . " : " . implode(", ", $params));
                 $stmt->bind_param(...$params);
             }
             $stmt->execute();
