@@ -41,5 +41,15 @@ class UserModel extends Database
         return $this->delete("DELETE FROM ratings WHERE id = ?", ["i", $id]);
     }
 
+    public function addRating($username, $artist, $song, $rating) {
+        return $this->delete("INSERT INTO ratings (username, artist, song, rating) VALUES (?, ?, ?, ?)", ["sssi", $username, $artist, $song, $rating]);
+    }
+
+    public function checkUserAlreadyRated($username, $artist, $song) {
+        $result = $this->select("SELECT username, artist, song FROM ratings WHERE username = ? AND artist = ? AND song = ?", ["sss", $username, $artist, $song]);
+        // Returns true if user hasn't already rated
+        return (count($result) == 0);
+    }
+
 }
 ?>
