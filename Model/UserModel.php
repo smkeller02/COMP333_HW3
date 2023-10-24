@@ -68,7 +68,7 @@ class UserModel extends Database
 
     public function checkUserAllowedToUpdate($username, $id) {
         $result = $this->select("SELECT username FROM ratings WHERE id = ?", ["i", $id]);
-        // Returns true if username given matches username on for given rating id
+        // Returns true if username given matches username for given rating id
         return ($result[0]["username"] == $username);
     }
 

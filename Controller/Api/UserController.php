@@ -139,25 +139,30 @@ class UserController extends BaseController
         // Get the request method (e.g., GET, POST, PUT, DELETE)
         $strErrorDesc = '';
         $requestMethod = $_SERVER["REQUEST_METHOD"];
-        $arrQueryStringParams = $this->getQueryStringParams();
         // Check if the request method is DELETE
         if (strtoupper($requestMethod) == 'DELETE') {
             try {
                 // Retrieve user regustration data from the request body
                 $postData = json_decode(file_get_contents('php://input'), true);
-                if (!(array_key_exists('id', $postData))) {
-                    $strErrorDesc = "Missing id number";
+                if (!(array_key_exists('id', $postData) && array_key_exists('username', $postData))) {
+                    $strErrorDesc = "Missing id number or username";
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                 } else {
                     $id = $postData["id"];
+                    $username = $postData["username"];
                     $userModel = new UserModel();
                     $ratingDeleted = false;
                     if ($userModel->checkIdExists($id)) {
                         $strErrorDesc = "id number not found";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     } else {
-                        $userModel->deleteRating($id);
-                        $ratingDeleted = true;
+                        if ($userModel->checkUserAllowedToUpdate($username, $id)) {
+                            $userModel->deleteRating($id);
+                            $ratingDeleted = true;
+                        } else {
+                            $strErrorDesc = "User did not create this rating and is not allowed to modify it";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        }
                     }
                     // Turn into array for better reading comprehension of output
                     $array = [
