@@ -32,6 +32,18 @@ class Database
         }
     }
 
+    public function insert($query = "" , $params = [])
+    {
+        try {
+            $stmt = $this->executeStatement( $query , $params );
+            $stmtResult = $stmt->get_result();
+            $stmt->close();
+            return true; //ASSUMES SUCCESSFUL INSERT
+        } catch(Exception $e) {
+            throw New Exception( $e->getMessage() );
+        }
+    }
+    
     private function executeStatement($query = "" , $params = [])
     {
         try {
