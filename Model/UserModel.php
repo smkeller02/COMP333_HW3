@@ -24,6 +24,18 @@ class UserModel extends Database
         return (count($rows) == 0 ? "" : $rows[0]['password']);
     }
 
+    public function getSingleRating($id)
+    {
+        return $this->select("SELECT username, artist, song, rating FROM ratings WHERE id = ?", ["i", $id]);
+    }
+
+    public function checkIdExists($id)
+    {
+        $result = $this->select("SELECT username, artist, song, rating FROM ratings WHERE id = ?", ["i", $id]);
+        // Returns true if id found in database
+        return (count($result) == 0);
+    }
+
     
 }
 ?>

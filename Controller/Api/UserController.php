@@ -1,6 +1,52 @@
 <?php
 class UserController extends BaseController
 {
+    public function viewratingAction() {
+        // Get the request method (e.g., GET, POST, PUT, DELETE)
+        $strErrorDesc = '';
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+        $arrQueryStringParams = $this->getQueryStringParams();
+        // Check if the request method is GET
+        if (strtoupper($requestMethod) == 'GET') {
+            try {
+                // Retrieve user regustration data from the request body
+                $postData = json_decode(file_get_contents('php://input'), true);
+                if (!(array_key_exists('id', $postData))) {
+                    $strErrorDesc = "Missing id number";
+                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                } else {
+                    $id = $postData["id"];
+                    $userModel = new UserModel();
+                    if ($userModel->checkIdExists($id)) {
+                        $strErrorDesc = "id number not found";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    } else {
+                        $result = $userModel->getSingleRating($id);
+                        $responseData = json_encode($result);
+                    }
+                }
+            } catch (Exception $e) {
+                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            }
+        } else {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+
+        // send output
+        if (!$strErrorDesc) {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } else {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)),
+                array('Content-Type: application/json', $strErrorHeader)
+            );
+        }
+    }
+
     public function loginuserAction() {
         // Get the request method (e.g., GET, POST, PUT, DELETE)
         $strErrorDesc = '';
