@@ -17,6 +17,13 @@ class UserModel extends Database
     {
         return $this->insert("INSERT INTO users (username, password) VALUES (?, ?)", ["ss", $username, $password]);
     }
+
+    public function getUsersHashedPwd($username)
+    {
+        $rows = $this->select("SELECT password FROM users WHERE username = ?", ["s", $username]);
+        return (count($rows) == 0 ? "" : $rows[0]['password']);
+    }
+
     
 }
 ?>
