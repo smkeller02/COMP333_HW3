@@ -1,6 +1,72 @@
 <?php
 class UserController extends BaseController
 {
+    public function updateratingAction() {
+        // Get the request method (e.g., GET, POST, PUT, DELETE)
+        $strErrorDesc = '';
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+        $arrQueryStringParams = $this->getQueryStringParams();
+        // Check if the request method is POST
+        if (strtoupper($requestMethod) == 'POST') {
+            try {
+                // Retrieve user regustration data from the request body
+                $postData = json_decode(file_get_contents('php://input'), true);
+                if (!(array_key_exists('id', $postData) && array_key_exists('username', $postData) && array_key_exists('artist', $postData) && array_key_exists('song', $postData) && array_key_exists('rating', $postData))) {
+                    $strErrorDesc = "Not all fields filled out";
+                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                } else {
+                    $id = $postData["id"];
+                    $username = $postData["username"];
+                    $artist = $postData["artist"];
+                    $song = $postData["song"];
+                    $rating = $postData["rating"];
+                    $userModel = new UserModel();
+                    $notRatedYet = $userModel->checkPreviouslyRated($id, $username, $artist, $song);
+                    $usernameMatch = $userModel->checkUserAllowedToUpdate($username, $id);
+                    $ratingUpdated = false;
+                    // Check valid new rating input
+                    if (!(($rating <= 5 && $rating >= 1) && $notRatedYet && $usernameMatch)) {
+                        if (!($rating <= 5 && $rating >= 1)) {
+                            $strErrorDesc = "Rating must be between 1 and 5";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        } else if (!$notRatedYet) {
+                            $strErrorDesc = "User already rated song+artist under different ID";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        } else {
+                            $strErrorDesc = "User did not create this rating and is not allowed to modify it";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        }
+                    } else {
+                        $userModel->updateRating($artist, $song, $rating, $id);
+                        $ratingUpdated = true;
+                    }
+                    // Turn into array for better reading comprehension of output
+                    $array = [
+                        "rating updated" => $ratingUpdated
+                    ];
+                    $responseData = json_encode($array);
+                }
+            } catch (Exception $e) {
+                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            }
+        } else {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+         // send output
+        if (!$strErrorDesc) {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } else {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)),
+                array('Content-Type: application/json', $strErrorHeader)
+            );
+        } 
+    }
+
     public function addnewratingAction() {
         // Get the request method (e.g., GET, POST, PUT, DELETE)
         $strErrorDesc = '';

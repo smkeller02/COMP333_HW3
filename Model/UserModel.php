@@ -51,5 +51,26 @@ class UserModel extends Database
         return (count($result) == 0);
     }
 
+    public function checkPreviouslyRated($id, $username, $artist, $song) { // Different than above func. For update feature
+        $result = $this->select("SELECT id FROM ratings WHERE username = ? AND artist = ? AND song = ?", ["sss", $username, $artist, $song]);
+        // Returns true if user hasn't already rated, false otherise
+        for ($i = 0; $i < count($result); $i++) {
+            if ($result[$i]["id"] != $id) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function updateRating($artist, $song, $rating, $id) {
+        return $this->insert("UPDATE ratings SET artist = ?, song = ?, rating = ? WHERE id = ?", ["sssi", $artist, $song, $rating, $id]);
+    }
+
+    public function checkUserAllowedToUpdate($username, $id) {
+        $result = $this->select("SELECT username FROM ratings WHERE id = ?", ["i", $id]);
+        // Returns true if username given matches username on for given rating id
+        return ($result[0]["username"] == $username);
+    }
+
 }
 ?>
