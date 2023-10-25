@@ -259,7 +259,7 @@ class UserController extends BaseController
                     if(password_verify($password, $hashedpwd)){
                         $responseData = "{\"loggedIn\" : \"true\"}";
                     } else {
-                        $strErrorDesc = "Login Failed";
+                        $strErrorDesc = "Incorrect username/password";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     }
                 }
