@@ -1,5 +1,5 @@
 <?php
-// CORS
+// CORS headers
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: *");
@@ -18,8 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require __DIR__ . "/inc/bootstrap.php";
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-//CORS headers
-header('Access-Control-Allow-Origin:*'); //
 $uri = explode( '/', $uri );
 //for ( $i = 0; $i < count( $uri ); $i++ ) {
      //echo ("</br> $i " . $uri[$i] ."");

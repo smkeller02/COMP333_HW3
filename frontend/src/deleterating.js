@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
 function DeleteRating() {
   //NOTE HERE THE USER SHOULDN'T NEED TO INSERT ID, 
@@ -8,7 +8,7 @@ function DeleteRating() {
   const [username, setUsername] = useState("");
   const [id, setId] = useState("");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
  
   let handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +29,7 @@ function DeleteRating() {
         setId("");
         setMessage("Rating Deleted");
         // Redirect user to ratings page
-        navigate("/ratingstable");
+        //navigate("/ratingstable");
       } else if (res.status === 400) {
           // Access the error message from backend
           setMessage(resJson.error);
@@ -42,7 +42,7 @@ function DeleteRating() {
   };
 
   return (
-    <div className="LoginUser">
+    <div className="DeleteRating">
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -51,7 +51,7 @@ function DeleteRating() {
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
-          type="text"
+          type="number"
           value={id}
           placeholder="Id"
           onChange={(e) => setId(e.target.value)}
