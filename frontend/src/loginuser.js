@@ -1,21 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function CreateUser() {
+function LoginUser() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
  
   let handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== password2) {
-      setMessage("Passwords dont match");
-      return;
-    }
     try {
-      let res = await fetch("http://localhost/COMP333_HW3/index.php/createuser", {
+      let res = await fetch("http://localhost/COMP333_HW3/index.php/loginuser", {
         method: "POST",
         body: JSON.stringify({
           "username": username,
@@ -27,10 +22,9 @@ function CreateUser() {
       });
       let resJson = await res.json();
       if (res.status === 200) {
-        console.log("ok signup");
         setUsername("");
         setPassword("");
-        setMessage("Signup successfull!");
+        setMessage("Login successfull!");
         // Redirect user to ratings page
         navigate("/ratingstable");
       } else if (res.status === 400) {
@@ -59,14 +53,7 @@ function CreateUser() {
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <input
-          type="password"
-          value={password2}
-          placeholder="Re-type Password"
-          onChange={(e) => setPassword2(e.target.value)}
-        />
-
-        <button type="submit">Sign Up</button>
+        <button type="submit">Login</button>
 
         <div className="message">{message ? <p>{message}</p> : null}</div>
       </form>
@@ -75,4 +62,4 @@ function CreateUser() {
 
 }
   
-  export default CreateUser;
+  export default LoginUser;
