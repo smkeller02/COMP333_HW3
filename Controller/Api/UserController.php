@@ -312,11 +312,14 @@ class UserController extends BaseController
                             $userCreated = true;
                         } else {
                             $userCreated = false;
+                            $strErrorDesc = "Username already taken";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                         }
                         // Turn into array for better reading comprehension
                         $array = [
                             "userExists" => $existsResult,
-                            "userCreated" => $userCreated
+                            "userCreated" => $userCreated,
+                            "message" => $strErrorDesc
                         ];
                         $responseData = json_encode($array);
                     }
