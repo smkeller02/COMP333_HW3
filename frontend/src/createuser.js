@@ -4,11 +4,16 @@ import { useNavigate } from "react-router-dom";
 function CreateUser() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
  
   let handleSubmit = async (e) => {
     e.preventDefault();
+    if (password !== password2) {
+      setMessage("Passwords dont match");
+      return;
+    }
     try {
       let res = await fetch("http://localhost/COMP333_HW3/index.php/createuser", {
         method: "POST",
@@ -53,6 +58,12 @@ function CreateUser() {
           value={password}
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
+        />
+        <input
+          type="password"
+          value={password2}
+          placeholder="Re-type Password"
+          onChange={(e) => setPassword2(e.target.value)}
         />
 
         <button type="submit">Sign Up</button>
