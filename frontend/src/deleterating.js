@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function LoginUser() {
+function DeleteRating() {
+  //NOTE HERE THE USER SHOULDN'T NEED TO INSERT ID, 
+  //SHOULD ONLY NEED TO CLICK ON SONG IN RATINGS TABLE AND DELETE PAGE WILL SHOW UP
+  //BACKEND DOES NEED ID TO RUN THOUGH
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [id, setId] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
  
   let handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let res = await fetch("http://localhost/COMP333_HW3/index.php/loginuser", {
-        method: "POST",
+      let res = await fetch("http://localhost/COMP333_HW3/index.php/deleterating", {
+        method: "DELETE",
         body: JSON.stringify({
           "username": username,
-          "password": password
+          "id": id
         }),
         headers: {
           "Content-Type": "application/json"
@@ -23,8 +26,8 @@ function LoginUser() {
       let resJson = await res.json();
       if (res.status === 200) {
         setUsername("");
-        setPassword("");
-        setMessage("Login successfull!");
+        setId("");
+        setMessage("Rating Deleted");
         // Redirect user to ratings page
         navigate("/ratingstable");
       } else if (res.status === 400) {
@@ -48,18 +51,17 @@ function LoginUser() {
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
-          type="password"
-          value={password}
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
+          type="text"
+          value={id}
+          placeholder="Id"
+          onChange={(e) => setId(e.target.value)}
         />
-        <button type="submit">Login</button>
+        <button type="submit">Delete</button>
 
         <div className="message">{message ? <p>{message}</p> : null}</div>
       </form>
     </div>
   );
-
-}
+  }
   
-  export default LoginUser;
+  export default DeleteRating;

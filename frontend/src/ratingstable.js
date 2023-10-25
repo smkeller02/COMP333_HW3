@@ -18,14 +18,14 @@ function Ratings() {
         console.error("Error fetching ratings:", error);
       });
   }, []);
-  
+
   if (!ratings) {
     return
   }
   console.log(ratings)
 
   return (
-    <div className="ratings-table">
+    <div className="RatingsTable">
       <h1>Ratings</h1>
       <ul>
         {ratings.map((rating) => (
