@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
 function Ratings() {
   // State to hold the ratings data
-  const [ratings, setRatings] = useState(null);
+  const [ratings, setRatings] = useState("");
+  const user = localStorage.getItem("user");
 
   // Fetch ratings data from the API
   useEffect(() => {
@@ -17,16 +17,18 @@ function Ratings() {
       .catch((error) => {
         console.error("Error fetching ratings:", error);
       });
-  }, []);
+    }, []);
 
   if (!ratings) {
-    return
+    return null;
   }
+
   console.log(ratings)
 
   return (
     <div className="RatingsTable">
       <h1>Ratings</h1>
+      <p>Welcome, {user}</p>
       <ul>
         {ratings.map((rating) => (
           <div className="ratings-preview" key={rating.id}>

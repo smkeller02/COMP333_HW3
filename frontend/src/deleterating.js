@@ -11,6 +11,7 @@ function DeleteRating() {
   //const navigate = useNavigate();
  
   let handleSubmit = async (e) => {
+    setUsername(localStorage.getItem("user"));
     e.preventDefault();
     try {
       let res = await fetch("http://localhost/COMP333_HW3/index.php/deleterating", {
@@ -44,12 +45,6 @@ function DeleteRating() {
   return (
     <div className="DeleteRating">
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={username}
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
         <input
           type="number"
           value={id}
