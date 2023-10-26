@@ -60,14 +60,18 @@ class UserController extends BaseController
                     $userModel = new UserModel();
                     $notRatedYet = $userModel->checkPreviouslyRated($id, $username, $artist, $song);
                     $usernameMatch = $userModel->checkUserAllowedToUpdate($username, $id);
+                    $checkId = $userModel->checkIdExists($id);
                     $ratingUpdated = false;
                     // Check valid new rating input
-                    if (!(($rating <= 5 && $rating >= 1) && $notRatedYet && $usernameMatch)) {
+                    if (!(($rating <= 5 && $rating >= 1) && $notRatedYet && $usernameMatch && !$checkId)) {
                         if (!($rating <= 5 && $rating >= 1)) {
                             $strErrorDesc = "Rating must be between 1 and 5";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                         } else if (!$notRatedYet) {
                             $strErrorDesc = "User already rated song+artist under different ID";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        }else if ($checkId) {
+                            $strErrorDesc = "Could not find ID";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                         } else {
                             $strErrorDesc = "User did not create this rating and is not allowed to modify it";

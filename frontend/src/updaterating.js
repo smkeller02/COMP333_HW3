@@ -2,8 +2,7 @@ import React, { useState } from "react";
 //import { useNavigate } from "react-router-dom";
 
 function UpdateRating() {
-  //NOTE: USER SHOULD NOT HAVE TO PUT IN USERNAME, NEED TO ADD PHP SESSION IN BACKEND
-  // ALSO, USER SHOULD NOT PUT IN ID, THAT SHOULD BE SENT TO BACKEND WHEN USER CLICKS - for now though, this is just a proof of concept
+  //NOTE: USER SHOULD NOT PUT IN ID, THAT SHOULD BE SENT TO BACKEND WHEN USER CLICKS - for now though, this is just a proof of concept
   // Values for update should auto fill with rating user clicked to update
   const [id, setId] = useState("");
   const [username, setUsername] = useState("");
@@ -14,6 +13,7 @@ function UpdateRating() {
   //const navigate = useNavigate();
  
   let handleSubmit = async (e) => {
+    setUsername(localStorage.getItem("user"));
     e.preventDefault();
     try {
       let res = await fetch("http://localhost/COMP333_HW3/index.php/updaterating", {
@@ -58,12 +58,6 @@ function UpdateRating() {
           value={id}
           placeholder="Id"
           onChange={(e) => setId(e.target.value)}
-        />
-        <input
-          type="text"
-          value={username}
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="text"

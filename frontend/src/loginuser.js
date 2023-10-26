@@ -22,9 +22,11 @@ function LoginUser() {
       });
       let resJson = await res.json();
       if (res.status === 200) {
+        setMessage("Login successfull!");
         setUsername("");
         setPassword("");
-        setMessage("Login successfull!");
+        // Locally store username to use throughout frontend
+        localStorage.setItem("user", username);
         // Redirect user to ratings page
         navigate("/ratingstable");
       } else if (res.status === 400) {

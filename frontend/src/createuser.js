@@ -28,16 +28,15 @@ function CreateUser() {
       let resJson = await res.json();
       if (res.status === 200) {
         console.log("ok signup");
-        setUsername("");
-        setPassword("");
-        setMessage("Signup successfull!");
+        // Locally store username to use throughout frontend
+        localStorage.setItem("user", username);
         // Redirect user to ratings page
         navigate("/ratingstable");
       } else if (res.status === 400) {
-          // Access the error message from backend
-          setMessage(resJson.error);
+        // Access the error message from backend
+        setMessage(resJson.error);
       } else {
-        setMessage("Something went wrong");
+        setMessage("error : ", res.status);
       }
     } catch (err) {
       console.log(err);
