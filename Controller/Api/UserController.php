@@ -195,17 +195,16 @@ class UserController extends BaseController
         // Get the request method (e.g., GET, POST, PUT, DELETE)
         $strErrorDesc = '';
         $requestMethod = $_SERVER["REQUEST_METHOD"];
-        $arrQueryStringParams = $this->getQueryStringParams();
         // Check if the request method is GET
         if (strtoupper($requestMethod) == 'GET') {
             try {
                 // Retrieve user regustration data from the request body
-                $postData = json_decode(file_get_contents('php://input'), true);
-                if (!(array_key_exists('id', $postData))) {
+                $id = isset($_GET['id']) ? $_GET['id'] : null;
+
+                if (!$id) {
                     $strErrorDesc = "Missing id number";
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                 } else {
-                    $id = $postData["id"];
                     $userModel = new UserModel();
                     if ($userModel->checkIdExists($id)) {
                         $strErrorDesc = "id number not found";
