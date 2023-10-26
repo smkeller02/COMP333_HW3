@@ -1,6 +1,43 @@
 <?php
+session_start();
 class UserController extends BaseController
 {
+    public function logoutAction() {
+        $_SESSION = array();
+        session_destroy();
+    }
+    public function phpsessionAction() {
+        $strErrorDesc = "";
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+        if (strtoupper($requestMethod) == "GET") {
+            try {
+                if (isset($_SESSION['username'])) {
+                    $responseData = json_encode(['username' => $_SESSION['username']]);
+                } else {
+                    // No session data exists return HTTP 401 Unauthorized
+                    $strErrorDesc = "Log in/sign up to view";
+                    $strErrorHeader = 'HTTP/1.1 401 Unauthorized';
+                }
+            } catch (Exception $e) {
+                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            }
+        } else {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+        // send output
+        if (!$strErrorDesc) {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } else {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)),
+                array('Content-Type: application/json', $strErrorHeader)
+            );
+        } 
+    }
     public function updateratingAction() {
         // Get the request method (e.g., GET, POST, PUT, DELETE)
         $strErrorDesc = '';
@@ -256,6 +293,7 @@ class UserController extends BaseController
                     $userModel = new UserModel();
                     $hashedpwd = $userModel->getUsersHashedPwd($username);
                     if(password_verify($password, $hashedpwd)){
+                        $_SESSION['username'] = $username; // Store the username in the session
                         $responseData = "{\"loggedIn\" : \"true\"}";
                     } else {
                         $strErrorDesc = "Incorrect username/password";
@@ -314,6 +352,7 @@ class UserController extends BaseController
                             $strErrorDesc = "Username already taken";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                         }
+                        $_SESSION['username'] = $username; // Store the username in the session
                         // Turn into array for better reading comprehension
                         $array = [
                             "userExists" => $existsResult,
