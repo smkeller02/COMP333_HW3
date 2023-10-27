@@ -1,4 +1,7 @@
 <?php
+// SYDNEY KELLER + MINJI WOO 
+// smkeller@wesleyan.edu, mjwoo@wesleyan.edu
+
 session_start();
 class Database
 {
@@ -15,6 +18,8 @@ class Database
             throw new Exception($e->getMessage());
         }
     }
+
+    // For selecting something from a database
     public function select($query = "" , $params = [])
     {
         try {
@@ -28,6 +33,7 @@ class Database
         }
     }
 
+    // For inserting data into database
     public function insert($query = "" , $params = [])
     {
         try {
@@ -39,7 +45,8 @@ class Database
             throw New Exception( $e->getMessage() );
         }
     }
-    
+
+    // For deleting, but also general function for manipulating database
     public function delete($query = "" , $params = [])
     {
         try {
