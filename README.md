@@ -13,10 +13,10 @@ Learning how to:</br>
 
 
 # Setting up the developement environment:
-1. GIT clone into XAMPP htdocs folder
-2. Move the frontend folder which contains the entire react app out of htdocs to desktop or where you prefer
+1. GIT clone directly into XAMPP htdocs folder
+2. Move the frontend folder which contains the entire react app out of htdocs to desktop or where you prefer (Note: If this doesn't work, simply copy the 'frontend' folder from htdocs/COMP333_HW3 and paste it into your desktop which may take a minute and then delete your 'frontend' folder from your COMP333_HW3 repo now that a copy of it lives on your desktop.)
 3. Make sure your general structure of files is as follows:
-- XAMPP->xamppfiles->htdocs->COMP333_HW3 (the repo)
+- XAMPP/xamppfiles/htdocs/COMP333_HW3 (the repo)
 - COMP333_HW3 should only contain License, Readme, index.php and Controller, inc, Images, Model folders once frontend is moved to desktop
 4. Setting up MySQL database, local XAMPP dev environment, and phpMyAdmin:
 - Screenshot of local XAMPP developement environment 
@@ -152,4 +152,4 @@ https://www.geeksforgeeks.org/how-to-get-parameters-from-a-url-string-in-php/ - 
 https://stackoverflow.com/questions/5884807/get-url-parameter-in-php - how to receive URI arguments from frontend</br>
 https://stackoverflow.com/questions/61517408/how-i-can-use-php-session-in-react - integrating PHP sessions to react</br>
 https://stackoverflow.com/questions/676846/do-ajax-requests-retain-php-session-info - integrating PHP sessions to react</br>
-https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem - store username locally
+https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem - store username locally</br>
