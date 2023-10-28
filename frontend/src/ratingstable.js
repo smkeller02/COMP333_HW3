@@ -9,8 +9,8 @@ function Ratings() {
   const user = localStorage.getItem("user");
 
   // State to track which rating should be updated or deleted
-  const [updateRatingId, setUpdateRatingId] = useState(null);
-  const [deleteRatingId, setDeleteRatingId] = useState(null);
+  const [updateRating, setUpdateRating] = useState(null);
+  const [deleteRating, setDeleteRating] = useState(null);
 
   // Fetch ratings data from the API
   useEffect(() => {
@@ -32,18 +32,23 @@ function Ratings() {
 
   const isSongCreatedByUser = (rating) => {
     // determine if the song is created by the logged-in user
-    console.log(rating.username);
     return user === rating.username;
   };
 
   const handleUpdate = (rating) => {
-    // Set the updateRatingId when the user clicks the "Update" button
-    setUpdateRatingId(rating.id);
+    // Toggle the selected rating when the user clicks the "Update" button
+    setUpdateRating((prevSelected) =>
+      prevSelected === rating ? null : rating
+    );
+    setDeleteRating(null);
   };
 
   const handleDelete = (rating) => {
-    // Set the deleteRatingId when the user clicks the "Delete" button
-    setDeleteRatingId(rating.id);
+    // Toggle the selected rating when the user clicks the "Delete" button
+    setDeleteRating((prevSelected) =>
+      prevSelected === rating ? null : rating
+    );
+    setUpdateRating(null);
   };
 
   console.log(ratings)
@@ -97,15 +102,25 @@ function Ratings() {
                 </span>
               </div>
             )}
+            {updateRating && updateRating.id === rating.id && (
+              <div>
+                {updateRating === rating ? (
+                  <UpdateRating ratingId={updateRating.id} />
+                ) : null
+              }
+              </div>
+            )}
+            {deleteRating && deleteRating.id === rating.id && (
+              <div>
+                {deleteRating === rating ? (
+                  <DeleteRating ratingId={deleteRating.id} />
+                ) : null
+              }
+              </div>
+            )}
           </div>
         ))}
       </ul> 
-
-      {/* Render the UpdateRating component if updateRatingId is set */}
-      {updateRatingId && <UpdateRating ratingId={updateRatingId} />}
-
-      {/* Render the DeleteRating component if deleteRatingId is set */}
-      {deleteRatingId && <DeleteRating ratingId={deleteRatingId} />}
     </div>
   )
 }
