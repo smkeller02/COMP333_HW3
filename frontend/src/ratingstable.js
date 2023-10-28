@@ -25,6 +25,36 @@ function Ratings() {
 
   console.log(ratings)
 
+  const renderStars = (rating) => {
+    const maxRating = 5; 
+
+    // Create an array to store star elements
+    const starArray = [];
+
+    // Fill the stars based on the rating value
+    for (let i = 1; i <= maxRating; i++) {
+      if (i <= rating) {
+        // Filled star
+        starArray.push(
+          <span key={i} className="star-filled" style={{ color: "yellow" }}>
+            &#9733;
+          </span>
+        );
+      } else {
+        // Empty star
+        starArray.push(
+          <span key={i} className="star-empty" style={{ color: "gray" }}>
+            &#9733;
+          </span>
+        );
+      }
+    }
+
+    return (
+      <div className="star-rating">{starArray}</div>
+    );
+  };
+
   return (
     <div className="RatingsTable">
       <h1>Ratings</h1>
@@ -32,13 +62,12 @@ function Ratings() {
       <ul>
         {ratings.map((rating) => (
           <div className="ratings-preview" key={rating.id}>
-            <h2>{rating.song}</h2>
-            <p>by {rating.artist}</p>
-            <p>rated by {rating.username}</p>
-            <p>rating: {rating.rating}</p>
+            <strong>{rating.song}</strong> by {rating.artist}
+            {/* <p>rated by {rating.username}</p> */}
+            <p>{renderStars(rating.rating)}</p>
           </div>
         ))}
-      </ul>
+      </ul> 
     </div>
   )
 }

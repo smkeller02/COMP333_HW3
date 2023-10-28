@@ -10,10 +10,11 @@ import UpdateRating from './updaterating';
 import ViewRating from './viewrating';
 
 function App() {
+
   return (
     <Router>
       <div>
-        <ul>
+        {/* <ul>
           <li>
             <Link to="/ratingstable">Ratings</Link>
           </li>
@@ -35,11 +36,21 @@ function App() {
           <li>
             <Link to="/createuser">Sign Up</Link>
           </li>
-        </ul>
+        </ul> */}
+        <div className="app-container">
+          <div className="main-content">
+            <Routes>
+              <Route path="/ratingstable" element={<Ratings />} />
+            </Routes>
+          </div>
+          <div className="sidebar-right">
+            <AddNewRating />
+          </div>
+      </div>
 
         <hr />
 
-        <Routes>
+        {/* <Routes>
           <Route path="/ratingstable" element={<Ratings />} />
           <Route path="/deleterating" element={<DeleteRating />} />
           <Route path="/addnewrating" element={<AddNewRating />} />
@@ -47,7 +58,7 @@ function App() {
           <Route path="/viewrating" element={<ViewRating />} />
           <Route path="/loginuser" element={<LoginUser />} />
           <Route path="/createuser" element={<CreateUser />} />
-        </Routes>
+        </Routes> */}
       </div>
     </Router>
   );
