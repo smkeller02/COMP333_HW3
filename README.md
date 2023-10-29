@@ -14,7 +14,7 @@ Learning how to:</br>
 
 # Setting up the developement environment:
 1. GIT clone directly into XAMPP htdocs folder
-2. Move the frontend folder which contains the entire react app out of htdocs to desktop or where you prefer (Note: If this doesn't work, simply copy the 'frontend' folder from htdocs/COMP333_HW3 and paste it into your desktop which may take a minute and then delete your 'frontend' folder from your COMP333_HW3 repo now that a copy of it lives on your desktop.)
+2. Copy the 'frontend' folder which contains the entire react app from htdocs/COMP333_HW3 and paste it into your desktop which may take a minute. You can now delete your 'frontend' folder from your COMP333_HW3 repo because a copy of it lives on your desktop. (Note: Please do not move the frontend folder by dragging it. This will not work. Make sure you copy the folder and then paste it in desktop.)
 3. Make sure your general structure of files is as follows:
 - XAMPP/xamppfiles/htdocs/COMP333_HW3 (the repo)
 - COMP333_HW3 should only contain License, Readme, index.php and Controller, inc, Images, Model folders once frontend is moved to desktop
@@ -112,6 +112,7 @@ frontend (again, this folder should be moved out of htdocs folder to somewhere e
     - addnewrating.js - component that connects with backend to add a new rating to the datatable
     - updaterating.js - component that connects with backend to update a given rating selected by user on frontend
     - viewrating.js - component that lets a user view a single rating
+    - searchfilerratings.js - component for search and filtering ratings datatable
 
 ## Other files:
 Images:
@@ -153,3 +154,4 @@ https://stackoverflow.com/questions/5884807/get-url-parameter-in-php - how to re
 https://stackoverflow.com/questions/61517408/how-i-can-use-php-session-in-react - integrating PHP sessions to react</br>
 https://stackoverflow.com/questions/676846/do-ajax-requests-retain-php-session-info - integrating PHP sessions to react</br>
 https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem - store username locally</br>
+https://www.freecodecamp.org/news/search-and-filter-component-in-reactjs/ - search feature</br>
