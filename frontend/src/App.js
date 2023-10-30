@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import './App.css';
 import Ratings from './ratingstable';
@@ -10,10 +10,43 @@ import UpdateRating from './updaterating';
 import ViewRating from './viewrating';
 
 function App() {
+  const [user, setUser] = useState(""); // To store the logged-in user
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if the user is logged in
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      setUser(loggedInUser);
+      setLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(""); // Clear the user state
+    setLoggedIn(false); // Update the login status
+  };
 
   return (
     <Router>
       <div>
+        {/* Render the "Login" button if the user is not logged in */}
+        {!loggedIn && (
+          <LoginUser />
+        )}
+
+        {/* Render the "Sign Up" component if the user is not signed in */}
+        {!loggedIn && (
+          <CreateUser />
+        )}
+
+        {/* Render the "Exit" button if a user is logged in */}
+        {loggedIn && (
+          <button className="exit-button" onClick={handleLogout}>
+            Exit
+          </button>
+        )}
         {/* <ul>
           <li>
             <Link to="/ratingstable">Ratings</Link>
