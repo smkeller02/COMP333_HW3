@@ -7,8 +7,34 @@ class UserController extends BaseController
 {
     // Logs out a user, destroys and resets PHP session
     public function logoutAction() {
-        $_SESSION = array();
-        session_destroy();
+        $logoutstatus = false;
+        $strErrorDesc = "";
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+        if (strtoupper($requestMethod) == "POST") {
+            $_SESSION = array();
+            session_destroy();
+            $logoutstatus = true;
+        // If not a GET request, give error message
+        } else {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+        // Turn into array for better reading comprehension of output
+        $array = [
+            "loggedout" => $logoutstatus
+        ];
+        $responseData = json_encode($array);
+        // send output
+        if (!$strErrorDesc) {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } else {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)),
+                array('Content-Type: application/json', $strErrorHeader)
+            );
+        } 
     }
 
     // Tells frontend if user logged in, if so, sends username, if not, sends 401 unauthorized error
@@ -70,38 +96,44 @@ class UserController extends BaseController
                     $song = $postData["song"];
                     $rating = $postData["rating"];
                     $ratingUpdated = false;
-                    // Craete new UserModel and send requests to backend checking:
+                    // Give error if user tries to submit empty data fields
+                    if (($id == "") || ($username == "") || ($artist == "") || ($song == "") || ($rating == "")) {
+                        $strErrorDesc = "Not all fields filled out";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    } else {
+                        // Craete new UserModel and send requests to backend checking:
                         //if the user has already rated a song
                         //if the user is allowed to update (only if they initially created the rating)
                         //if the id given actually exists 
-                    $userModel = new UserModel();
-                    $notRatedYet = $userModel->checkPreviouslyRated($id, $username, $artist, $song);
-                    $usernameMatch = $userModel->checkUserAllowedToUpdate($username, $id);
-                    $checkId = $userModel->checkIdExists($id);
-                    // If data passes all checks, update rathing, else give HTTP 400 and correct error message
-                    if (!(($rating <= 5 && $rating >= 1) && $notRatedYet && $usernameMatch && !$checkId)) {
-                        if (!($rating <= 5 && $rating >= 1)) {
-                            $strErrorDesc = "Rating must be between 1 and 5";
-                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-                        } else if (!$notRatedYet) {
-                            $strErrorDesc = "User already rated song+artist under different ID";
-                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-                        }else if ($checkId) {
-                            $strErrorDesc = "Could not find ID";
-                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        $userModel = new UserModel();
+                        $notRatedYet = $userModel->checkPreviouslyRated($id, $username, $artist, $song);
+                        $usernameMatch = $userModel->checkUserAllowedToUpdate($username, $id);
+                        $checkId = $userModel->checkIdExists($id);
+                        // If data passes all checks, update rathing, else give HTTP 400 and correct error message
+                        if (!(($rating <= 5 && $rating >= 1) && $notRatedYet && $usernameMatch && !$checkId)) {
+                            if (!($rating <= 5 && $rating >= 1)) {
+                                $strErrorDesc = "Rating must be between 1 and 5";
+                                $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                            } else if (!$notRatedYet) {
+                                $strErrorDesc = "User already rated song+artist under different ID";
+                                $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                            }else if ($checkId) {
+                                $strErrorDesc = "Could not find ID";
+                                $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                            } else {
+                                $strErrorDesc = "User did not create this rating and is not allowed to modify it";
+                                $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                            }
                         } else {
-                            $strErrorDesc = "User did not create this rating and is not allowed to modify it";
-                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                            $userModel->updateRating($artist, $song, $rating, $id);
+                            $ratingUpdated = true;
                         }
-                    } else {
-                        $userModel->updateRating($artist, $song, $rating, $id);
-                        $ratingUpdated = true;
+                        // Turn into array for better reading comprehension of output
+                        $array = [
+                            "rating updated" => $ratingUpdated
+                        ];
+                        $responseData = json_encode($array);
                     }
-                    // Turn into array for better reading comprehension of output
-                    $array = [
-                        "rating updated" => $ratingUpdated
-                    ];
-                    $responseData = json_encode($array);
                 }
             // Catch exception
             } catch (Exception $e) {
@@ -136,9 +168,9 @@ class UserController extends BaseController
             try {
                 // Retrieve user rating data from the request body
                 $postData = json_decode(file_get_contents('php://input'), true);
-                // Give error if user tries to submit empty data fields
+                // Give error if not all data needed for backend in array sent by frontend
                 if (!(array_key_exists('username', $postData) && array_key_exists('artist', $postData) && array_key_exists('song', $postData) && array_key_exists('rating', $postData))) {
-                    $strErrorDesc = "Not all fields filled out";
+                    $strErrorDesc = "Not all data recieved";
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                 } else {
                     // All expected input received
@@ -146,32 +178,38 @@ class UserController extends BaseController
                     $artist = $postData["artist"];
                     $song = $postData["song"];
                     $rating = $postData["rating"];
-                    $userModel = new UserModel();
-                    // Checking that username is valid (already in database)
-                    $existsResult = $userModel->checkUserExists($username); 
-                    if (!$existsResult) {
-                        $strErrorDesc = "User not in database, can not rate song";
-                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    // Give error if user tries to submit empty data fields
+                    if (($username == "") || ($artist == "") || ($song == "") || ($rating == "")) {
+                    $strErrorDesc = "Not all fields filled out";
+                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     } else {
-                        // Check for invalid rating number
-                        if (!($rating <= 5 && $rating >= 1)) {
-                            $strErrorDesc = "Rating must be between 1 and 5";
+                        $userModel = new UserModel();
+                        // Checking that username is valid (already in database)
+                        $existsResult = $userModel->checkUserExists($username); 
+                        if (!$existsResult) {
+                            $strErrorDesc = "User not in database, can not rate song";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                         } else {
-                            $ratingAdded = false;
-                            // Check if user has already rated song, if they have, send HTTP bad request
-                            if (!($userModel->checkUserAlreadyRated($username, $artist, $song))) {
-                                $strErrorDesc = "User already rated song";
+                            // Check for invalid rating number
+                            if (!($rating <= 5 && $rating >= 1)) {
+                                $strErrorDesc = "Rating must be between 1 and 5";
                                 $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                             } else {
-                                $userModel->addRating($username, $artist, $song, $rating);
-                                $ratingAdded = true;
+                                $ratingAdded = false;
+                                // Check if user has already rated song, if they have, send HTTP bad request
+                                if (!($userModel->checkUserAlreadyRated($username, $artist, $song))) {
+                                    $strErrorDesc = "User already rated song";
+                                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                                } else {
+                                    $userModel->addRating($username, $artist, $song, $rating);
+                                    $ratingAdded = true;
+                                }
+                                // Turn into array for better reading comprehension of output
+                                $array = [
+                                    "new rating added" => $ratingAdded
+                                ];
+                                $responseData = json_encode($array);
                             }
-                            // Turn into array for better reading comprehension of output
-                            $array = [
-                                "new rating added" => $ratingAdded
-                            ];
-                            $responseData = json_encode($array);
                         }
                     }
                 }
@@ -206,36 +244,42 @@ class UserController extends BaseController
             try {
                 // Retrieve user regustration data from the request body
                 $postData = json_decode(file_get_contents('php://input'), true);
-                // Give error if user tries to submit empty data fields
+                // Give error if not all data needed for backend in array sent by frontend
                 if (!(array_key_exists('id', $postData) && array_key_exists('username', $postData))) {
-                    $strErrorDesc = "Missing id number or username";
+                    $strErrorDesc = "Not all data recieved";
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                 } else {
                     // Set up variables from postData
                     $id = $postData["id"];
                     $username = $postData["username"];
                     $ratingDeleted = false;
-                    // Create new userModel and check if given id exits, if not, send error
-                    $userModel = new UserModel();
-                    if ($userModel->checkIdExists($id)) {
-                        $strErrorDesc = "id number not found";
+                    // Give error if user tries to submit empty data fields
+                    if (($id == "") || ($username == "")) {
+                        $strErrorDesc = "Not all fields filled out";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     } else {
-                        // If id exists, check if user is allowed to delete (only if they initially created rating)
-                        if ($userModel->checkUserAllowedToUpdate($username, $id)) {
-                            // Delete rating
-                            $userModel->deleteRating($id);
-                            $ratingDeleted = true;
-                        } else {
-                            $strErrorDesc = "User did not create this rating and is not allowed to modify it";
+                        // Create new userModel and check if given id exits, if not, send error
+                        $userModel = new UserModel();
+                        if ($userModel->checkIdExists($id)) {
+                            $strErrorDesc = "id number not found";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        } else {
+                            // If id exists, check if user is allowed to delete (only if they initially created rating)
+                            if ($userModel->checkUserAllowedToUpdate($username, $id)) {
+                                // Delete rating
+                                $userModel->deleteRating($id);
+                                $ratingDeleted = true;
+                            } else {
+                                $strErrorDesc = "User did not create this rating and is not allowed to modify it";
+                                $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                            }
                         }
+                        // Turn into array for better reading comprehension of output
+                        $array = [
+                            "rating deleted" => $ratingDeleted
+                        ];
+                        $responseData = json_encode($array);
                     }
-                    // Turn into array for better reading comprehension of output
-                    $array = [
-                        "rating deleted" => $ratingDeleted
-                    ];
-                    $responseData = json_encode($array);
                 }
             // Catch exception
             } catch (Exception $e) {
@@ -274,7 +318,7 @@ class UserController extends BaseController
                 $id = isset($_GET['id']) ? $_GET['id'] : null;
                 // if id not give, give proper error
                 if (!$id) {
-                    $strErrorDesc = "Missing id number";
+                    $strErrorDesc = "Not given id number";
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                 } else {
                     // Create new model and check given id is valid
@@ -322,27 +366,33 @@ class UserController extends BaseController
             try {
                 // Retrieve user regustration data from the request body
                 $postData = json_decode(file_get_contents('php://input'), true);
-                // Give error if user tries to submit empty data fields
+                // Give error if not all data needed for backend in array sent by frontend
                 if (!(array_key_exists('username', $postData) && array_key_exists('password', $postData))) {
-                    $strErrorDesc = "Missing username/password";
+                    $strErrorDesc = "Not all data recieved";
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                 } else {
                     // All expected input received
                     $username = $postData["username"];
                     $password = $postData["password"];
-                    // Create new UserModel and get users hashed password to check against
-                    $userModel = new UserModel();
-                    $hashedpwd = $userModel->getUsersHashedPwd($username);
-                    // If hashed password matches with one from database, store username in PHP session and set responceData to logged
-                        // getUserHashedPwd checks for valid username
-                    if(password_verify($password, $hashedpwd)){
-                        // Store the username in the session, set response data
-                        $_SESSION['username'] = $username;
-                        $responseData = "{\"loggedIn\" : \"true\"}";
-                    } else {
-                        // Give error message if passwords/username doesnt match database
-                        $strErrorDesc = "Incorrect username/password";
+                    // Give error if user tries to submit empty data fields
+                    if (($username == "") || ($password == "")) {
+                        $strErrorDesc = "Not all fields filled out";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    } else {
+                        // Create new UserModel and get users hashed password to check against
+                        $userModel = new UserModel();
+                        $hashedpwd = $userModel->getUsersHashedPwd($username);
+                        // If hashed password matches with one from database, store username in PHP session and set responceData to logged
+                            // getUserHashedPwd checks for valid username
+                        if(password_verify($password, $hashedpwd)){
+                            // Store the username in the session, set response data
+                            $_SESSION['username'] = $username;
+                            $responseData = "{\"loggedIn\" : \"true\"}";
+                        } else {
+                            // Give error message if passwords/username doesnt match database
+                            $strErrorDesc = "Incorrect username/password";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        }
                     }
                 }
             // Catch exception
@@ -377,40 +427,47 @@ class UserController extends BaseController
             try {
                 // Retrieve user regustration data from the request body
                 $postData = json_decode(file_get_contents('php://input'), true);
+                // Give error if not all data needed for backend in array sent by frontend
                 if (!(array_key_exists('username', $postData) && array_key_exists('password', $postData))) {
-                    $strErrorDesc = "Missing username/password";
+                    $strErrorDesc = "Not all data recieved";
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                 } else {
                     // All expected input received
                     $username = $postData["username"];
                     $password = $postData["password"];
-                    // Check if given password is long enough, if not give error
-                    if (strlen($password) < 10) {
-                        $strErrorDesc = "Password less than 10 characters";
+                    // Give error if user tries to submit empty data fields
+                    if (($username == "") || ($password == "")) {
+                        $strErrorDesc = "Not all fields filled out";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     } else {
-                        // If password is long enough, check if username is already in use
-                        $userModel = new UserModel();
-                        $existsResult = $userModel->checkUserExists($username);
-                        // If not, create user by inputting into database
-                        if (!$existsResult) {
-                            $userModel->createUser($username, password_hash($password, PASSWORD_DEFAULT));
-                            $userCreated = true;
-                            // Store the username in the session
-                            $_SESSION['username'] = $username;
-                        } else {
-                            // If username taken, give proper warning and error message
-                            $userCreated = false;
-                            $strErrorDesc = "Username already taken";
+                        // Check if given password is long enough, if not give error
+                        if (strlen($password) < 10) {
+                            $strErrorDesc = "Password less than 10 characters";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        } else {
+                            // If password is long enough, check if username is already in use
+                            $userModel = new UserModel();
+                            $existsResult = $userModel->checkUserExists($username);
+                            // If not, create user by inputting into database
+                            if (!$existsResult) {
+                                $userModel->createUser($username, password_hash($password, PASSWORD_DEFAULT));
+                                $userCreated = true;
+                                // Store the username in the session
+                                $_SESSION['username'] = $username;
+                            } else {
+                                // If username taken, give proper warning and error message
+                                $userCreated = false;
+                                $strErrorDesc = "Username already taken";
+                                $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                            }
+                            // Turn into array for better reading comprehension
+                            $array = [
+                                "userExists" => $existsResult,
+                                "userCreated" => $userCreated,
+                                "message" => $strErrorDesc
+                            ];
+                            $responseData = json_encode($array);
                         }
-                        // Turn into array for better reading comprehension
-                        $array = [
-                            "userExists" => $existsResult,
-                            "userCreated" => $userCreated,
-                            "message" => $strErrorDesc
-                        ];
-                        $responseData = json_encode($array);
                     }
                 }
             // Catch exception

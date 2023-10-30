@@ -63,7 +63,7 @@ function Ratings() {
         {ratings.map((rating) => (
           <div className="ratings-preview" key={rating.id}>
             <strong>{rating.song}</strong> by {rating.artist}
-            {/* <p>rated by {rating.username}</p> */}
+            <p>rated by {rating.username}</p>
             <p>{renderStars(rating.rating)}</p>
           </div>
         ))}
