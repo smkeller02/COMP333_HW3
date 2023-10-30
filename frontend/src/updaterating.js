@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
-function UpdateRating({ ratingId }) {
+function UpdateRating({ ratingId, user}) {
   //NOTE: USER SHOULD NOT PUT IN ID, THAT SHOULD BE SENT TO BACKEND WHEN USER CLICKS - for now though, this is just a proof of concept
   // Values for update should auto fill with rating user clicked to update
   // const [id, setId] = useState("");
-  const [username, setUsername] = useState("");
+  //const [username, setUsername] = useState("");
   const [artist, setArtist] = useState("");
   const [song, setSong] = useState("");
   const [rating, setRating] = useState("");
@@ -17,14 +17,14 @@ function UpdateRating({ ratingId }) {
   const navigate = useNavigate();
  
   let handleSubmit = async (e) => {
-    setUsername(localStorage.getItem("user"));
+   // setUsername(localStorage.getItem("user"));
     e.preventDefault();
     try {
       let res = await fetch("http://localhost/COMP333_HW3/index.php/updaterating", {
         method: "POST",
         body: JSON.stringify({
           "id": ratingId,
-          "username": username,
+          "username": user,
           "artist": artist,
           "song" : song,
           "rating" : rating
@@ -34,9 +34,12 @@ function UpdateRating({ ratingId }) {
         }
       });
       let resJson = await res.json();
+      console.log(user)
+      console.log(ratingId)
+      console.log(artist)
       if (res.status === 200) {
         // setId("");
-        setUsername("");
+        //setUsername("");
         setArtist("");
         setSong("");
         setRating("");
