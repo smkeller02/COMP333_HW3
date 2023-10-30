@@ -2,78 +2,8 @@
 // SYDNEY KELLER + MINJI WOO 
 // smkeller@wesleyan.edu, mjwoo@wesleyan.edu
 
-session_start();
 class UserController extends BaseController
 {
-    // Logs out a user, destroys and resets PHP session
-    public function logoutAction() {
-        $logoutstatus = false;
-        $strErrorDesc = "";
-        $requestMethod = $_SERVER["REQUEST_METHOD"];
-        if (strtoupper($requestMethod) == "POST") {
-            $_SESSION = array();
-            session_destroy();
-            $logoutstatus = true;
-        // If not a GET request, give error message
-        } else {
-            $strErrorDesc = 'Method not supported';
-            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
-        }
-        // Turn into array for better reading comprehension of output
-        $array = [
-            "loggedout" => $logoutstatus
-        ];
-        $responseData = json_encode($array);
-        // send output
-        if (!$strErrorDesc) {
-            $this->sendOutput(
-                $responseData,
-                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
-            );
-        } else {
-            $this->sendOutput(json_encode(array('error' => $strErrorDesc)),
-                array('Content-Type: application/json', $strErrorHeader)
-            );
-        } 
-    }
-
-    // Tells frontend if user logged in, if so, sends username, if not, sends 401 unauthorized error
-    public function phpsessionAction() {
-        $strErrorDesc = "";
-        $requestMethod = $_SERVER["REQUEST_METHOD"];
-        if (strtoupper($requestMethod) == "GET") {
-            try {
-                if (isset($_SESSION['username'])) {
-                    // Set responseData to users username to then send to frontend
-                    $responseData = json_encode(['username' => $_SESSION['username']]);
-                } else {
-                    // No session data exists return HTTP 401 Unauthorized
-                    $strErrorDesc = "Log in/sign up to view";
-                    $strErrorHeader = 'HTTP/1.1 401 Unauthorized';
-                }
-            // Catch exception
-            } catch (Exception $e) {
-                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
-                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
-            }
-        // If not a GET request, give error message
-        } else {
-            $strErrorDesc = 'Method not supported';
-            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
-        }
-        // send output
-        if (!$strErrorDesc) {
-            $this->sendOutput(
-                $responseData,
-                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
-            );
-        } else {
-            $this->sendOutput(json_encode(array('error' => $strErrorDesc)),
-                array('Content-Type: application/json', $strErrorHeader)
-            );
-        } 
-    }
-
     // Updates a users rating
     public function updateratingAction() {
         // Get the request method (e.g., GET, POST, PUT, DELETE)
@@ -382,11 +312,9 @@ class UserController extends BaseController
                         // Create new UserModel and get users hashed password to check against
                         $userModel = new UserModel();
                         $hashedpwd = $userModel->getUsersHashedPwd($username);
-                        // If hashed password matches with one from database, store username in PHP session and set responceData to logged
-                            // getUserHashedPwd checks for valid username
+                        // If hashed password matches with one from database, set responceData to logged
+                        // getUserHashedPwd checks for valid username
                         if(password_verify($password, $hashedpwd)){
-                            // Store the username in the session, set response data
-                            $_SESSION['username'] = $username;
                             $responseData = "{\"loggedIn\" : \"true\"}";
                         } else {
                             // Give error message if passwords/username doesnt match database
@@ -452,8 +380,6 @@ class UserController extends BaseController
                             if (!$existsResult) {
                                 $userModel->createUser($username, password_hash($password, PASSWORD_DEFAULT));
                                 $userCreated = true;
-                                // Store the username in the session
-                                $_SESSION['username'] = $username;
                             } else {
                                 // If username taken, give proper warning and error message
                                 $userCreated = false;
