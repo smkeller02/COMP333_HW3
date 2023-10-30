@@ -36,19 +36,22 @@ function Ratings() {
   };
 
   const handleUpdate = (rating) => {
-    // Toggle the selected rating when the user clicks the "Update" button
-    setUpdateRating((prevSelected) =>
-      prevSelected === rating ? null : rating
-    );
+    setUpdateRating(rating);
     setDeleteRating(null);
+  };
+  
+  const handleCancelUpdate = () => {
+    setUpdateRating(null);
   };
 
   const handleDelete = (rating) => {
-    // Toggle the selected rating when the user clicks the "Delete" button
-    setDeleteRating((prevSelected) =>
-      prevSelected === rating ? null : rating
-    );
-    setUpdateRating(null);
+    if (isSongCreatedByUser(rating)) {
+      // Toggle the selected rating when the user clicks the "Delete" button
+      setDeleteRating((prevSelected) =>
+        prevSelected === rating ? null : rating
+      );
+      setUpdateRating(null);
+    }
   };
 
   console.log(ratings)
@@ -90,8 +93,8 @@ function Ratings() {
       <ul>
         {ratings.map((rating) => (
           <div className="ratings-preview" key={rating.id}>
-            <strong>{rating.song}</strong> by {rating.artist}
             <p>{renderStars(rating.rating)}</p>
+            <p>rated by: {rating.username}</p>
             {isSongCreatedByUser(rating) && (
               <div>
                 <span onClick={() => handleUpdate(rating)} className="update-icon">
@@ -102,21 +105,11 @@ function Ratings() {
                 </span>
               </div>
             )}
-            {updateRating && updateRating.id === rating.id && (
-              <div>
-                {updateRating === rating ? (
-                  <UpdateRating ratingId={updateRating.id} />
-                ) : null
-              }
-              </div>
+            {updateRating && updateRating.id === rating.id && updateRating.username === rating.username && (
+              <UpdateRating ratingId={updateRating.id} user={updateRating.username}/>
             )}
             {deleteRating && deleteRating.id === rating.id && (
-              <div>
-                {deleteRating === rating ? (
-                  <DeleteRating ratingId={deleteRating.id} />
-                ) : null
-              }
-              </div>
+              <DeleteRating ratingId={deleteRating.id} onDelete={() => handleDelete(rating)} />
             )}
           </div>
         ))}
