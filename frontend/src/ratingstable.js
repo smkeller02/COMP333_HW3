@@ -93,6 +93,7 @@ function Ratings() {
       <ul>
         {ratings.map((rating) => (
           <div className="ratings-preview" key={rating.id}>
+            <strong>{rating.song}</strong> by {rating.artist}
             <p>{renderStars(rating.rating)}</p>
             <p>rated by: {rating.username}</p>
             {isSongCreatedByUser(rating) && (
