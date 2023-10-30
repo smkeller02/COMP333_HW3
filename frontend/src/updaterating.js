@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
-function UpdateRating({ ratingId, user}) {
+function UpdateRating({ ratingId, user, onDataChanged}) {
   //NOTE: USER SHOULD NOT PUT IN ID, THAT SHOULD BE SENT TO BACKEND WHEN USER CLICKS - for now though, this is just a proof of concept
   // Values for update should auto fill with rating user clicked to update
   // const [id, setId] = useState("");
@@ -44,6 +44,7 @@ function UpdateRating({ ratingId, user}) {
         setSong("");
         setRating("");
         setMessage("Rating updated");
+        onDataChanged();
         // Redirect user to ratings page
         navigate("/ratingstable"); 
       } else if (res.status === 400) {
