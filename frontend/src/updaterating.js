@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 //import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function UpdateRating() {
+
+function UpdateRating({ ratingId }) {
   //NOTE: USER SHOULD NOT PUT IN ID, THAT SHOULD BE SENT TO BACKEND WHEN USER CLICKS - for now though, this is just a proof of concept
   // Values for update should auto fill with rating user clicked to update
-  const [id, setId] = useState("");
+  // const [id, setId] = useState("");
   const [username, setUsername] = useState("");
   const [artist, setArtist] = useState("");
   const [song, setSong] = useState("");
   const [rating, setRating] = useState("");
   const [message, setMessage] = useState("");
   //const navigate = useNavigate();
+
+  const navigate = useNavigate();
  
   let handleSubmit = async (e) => {
     setUsername(localStorage.getItem("user"));
@@ -19,7 +23,7 @@ function UpdateRating() {
       let res = await fetch("http://localhost/COMP333_HW3/index.php/updaterating", {
         method: "POST",
         body: JSON.stringify({
-          "id": id,
+          "id": ratingId,
           "username": username,
           "artist": artist,
           "song" : song,
@@ -31,14 +35,14 @@ function UpdateRating() {
       });
       let resJson = await res.json();
       if (res.status === 200) {
-        setId("");
+        // setId("");
         setUsername("");
         setArtist("");
         setSong("");
         setRating("");
         setMessage("Rating updated");
         // Redirect user to ratings page
-        //navigate("/ratingstable");
+        navigate("/ratingstable"); 
       } else if (res.status === 400) {
           // Access the error message from backend
           setMessage(resJson.error);
@@ -53,12 +57,6 @@ function UpdateRating() {
   return (
     <div className="UpdateRating">
       <form onSubmit={handleSubmit}>
-          <input
-          type="number"
-          value={id}
-          placeholder="Id"
-          onChange={(e) => setId(e.target.value)}
-        />
         <input
           type="text"
           value={artist}
