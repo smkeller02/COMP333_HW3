@@ -1,7 +1,10 @@
 {
   "name": "music-united",
   "version": "0.1.0",
-  "proxy": "http://localhost:8000",
+  "options": {
+    "allowedHosts": ["localhost", ".localhost"],
+    "proxy": "https://localhost:8000/"
+  },
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
