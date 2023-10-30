@@ -31,22 +31,6 @@ function App() {
   return (
     <Router>
       <div>
-        {/* Render the "Login" button if the user is not logged in */}
-        {!loggedIn && (
-          <LoginUser />
-        )}
-
-        {/* Render the "Sign Up" component if the user is not signed in */}
-        {!loggedIn && (
-          <CreateUser />
-        )}
-
-        {/* Render the "Exit" button if a user is logged in */}
-        {loggedIn && (
-          <button className="exit-button" onClick={handleLogout}>
-            Exit
-          </button>
-        )}
         {/* <ul>
           <li>
             <Link to="/ratingstable">Ratings</Link>
@@ -77,7 +61,39 @@ function App() {
             </Routes>
           </div>
           <div className="sidebar-right">
-            <AddNewRating />
+          {!loggedIn && (
+            <div className="login_signin">
+              <div className="login">
+                <strong>Log In</strong>
+                {/* Render the "Login" button if the user is not logged in */}
+                {!loggedIn && (
+                  <LoginUser />
+                )}
+              </div>
+
+              <div className="signin">
+                <strong>Sign In</strong>
+                {/* Render the "Sign Up" component if the user is not signed in */}
+                {!loggedIn && (
+                  <CreateUser />
+                )}
+              </div>
+            </div>
+          )}
+
+            {/* Render the "Exit" button if a user is logged in */}
+            {loggedIn && (
+              <button className="exit-button" onClick={handleLogout}>
+                Exit
+              </button>
+            )}
+
+            {loggedIn && (
+              <div className="add-song-rating">
+                <strong>Add New Song Rating</strong>
+                <AddNewRating />
+              </div>
+            )}
           </div>
       </div>
 
