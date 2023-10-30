@@ -11,6 +11,12 @@ function Ratings() {
   // State to track which rating should be updated or deleted
   const [updateRating, setUpdateRating] = useState(null);
   const [deleteRating, setDeleteRating] = useState(null);
+  const [dataChanged, setDataChanged] = useState(false); // Track changes
+
+  // Define a function to handle data changes
+  const handleDataChange = () => {
+    setDataChanged(!dataChanged); 
+  };
 
   // Fetch ratings data from the API
   useEffect(() => {
@@ -24,7 +30,7 @@ function Ratings() {
       .catch((error) => {
         console.error("Error fetching ratings:", error);
       });
-    }, []);
+    }, [dataChanged]);
 
   if (!ratings) {
     return null;
@@ -107,7 +113,7 @@ function Ratings() {
               </div>
             )}
             {updateRating && updateRating.id === rating.id && updateRating.username === rating.username && (
-              <UpdateRating ratingId={updateRating.id} user={updateRating.username}/>
+              <UpdateRating ratingId={updateRating.id} user={updateRating.username} onDataChanged={handleDataChange}/>
             )}
             {deleteRating && deleteRating.id === rating.id && (
               <DeleteRating ratingId={deleteRating.id} onDelete={() => handleDelete(rating)} />
