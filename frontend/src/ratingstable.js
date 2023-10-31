@@ -120,7 +120,7 @@ function Ratings(props) {
               <UpdateRating ratingId={updateRating.id} user={updateRating.username} onDataChanged={handleDataChange}/>
             )}
             {deleteRating && deleteRating.id === rating.id && (
-              <DeleteRating ratingId={deleteRating.id} onDelete={() => handleDelete(rating) } />
+              <DeleteRating ratingId={deleteRating.id} onDelete={() => handleDelete(rating) } onDataChanged={handleDataChange} />
             )}
           </div>
         ))}

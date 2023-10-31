@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-//import { useNavigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
-function DeleteRating({ ratingId }) {
+function DeleteRating({ ratingId, onDataChanged }) {
   //NOTE HERE THE USER SHOULDN'T NEED TO INSERT ID, 
   //SHOULD ONLY NEED TO CLICK ON SONG IN RATINGS TABLE AND DELETE PAGE WILL SHOW UP
   //BACKEND DOES NEED ID TO RUN THOUGH
@@ -30,8 +30,9 @@ function DeleteRating({ ratingId }) {
         // setUsername("");
         // setId("");
         setMessage("Rating Deleted");
+        onDataChanged(); 
         // Redirect user to ratings page
-        //navigate("/ratingstable");
+        // navigate("/ratingstable");
       } else if (res.status === 400) {
           // Access the error message from backend
           setMessage(resJson.error);
