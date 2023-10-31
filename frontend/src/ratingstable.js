@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import UpdateRating from './updaterating';
 import DeleteRating from './deleterating';
 import './Ratings.css';
+import AddNewRating from './addnewrating';
 
-function Ratings() {
+function Ratings(props) {
   // State to hold the ratings data
   const [ratings, setRatings] = useState("");
   const user = localStorage.getItem("user");
@@ -13,8 +14,7 @@ function Ratings() {
   const [deleteRating, setDeleteRating] = useState(null);
   const [dataChanged, setDataChanged] = useState(false); // Track changes
 
-  // Define a function to handle data changes
-  const handleDataChange = () => {
+  const handleDataChange = (props) => {
     setDataChanged(!dataChanged); 
   };
 
@@ -30,7 +30,7 @@ function Ratings() {
       .catch((error) => {
         console.error("Error fetching ratings:", error);
       });
-    }, [dataChanged]);
+    }, [dataChanged, props.DataChanged]);
 
   if (!ratings) {
     return null;
@@ -58,6 +58,10 @@ function Ratings() {
       );
       setUpdateRating(null);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteRating(null);
   };
 
   console.log(ratings)
@@ -116,7 +120,7 @@ function Ratings() {
               <UpdateRating ratingId={updateRating.id} user={updateRating.username} onDataChanged={handleDataChange}/>
             )}
             {deleteRating && deleteRating.id === rating.id && (
-              <DeleteRating ratingId={deleteRating.id} onDelete={() => handleDelete(rating)} />
+              <DeleteRating ratingId={deleteRating.id} onDelete={() => handleDelete(rating) } />
             )}
           </div>
         ))}
