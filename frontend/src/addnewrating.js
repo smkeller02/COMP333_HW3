@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function AddNewRating() {
+function AddNewRating({onRatingAdded}) {
   const [artist, setArtist] = useState("");
   const [song, setSong] = useState("");
   const [rating, setRating] = useState("");
   const [message, setMessage] = useState("");
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
  
   const username = localStorage.getItem("user");
   let handleSubmit = async (e) => {
@@ -31,6 +31,11 @@ function AddNewRating() {
         setSong("");
         setRating("");
         setMessage("Rating added");
+        onRatingAdded();
+
+        // Automatically clear the message after 2 seconds
+        setTimeout(() => setMessage(""), 2000);
+        navigate("/ratingstable");
         // Redirect user to ratings page
         //navigate("/ratingstable");
       } else if (res.status === 400) {

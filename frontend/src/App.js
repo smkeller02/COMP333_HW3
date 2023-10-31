@@ -8,10 +8,12 @@ import CreateUser from './createuser';
 import AddNewRating from './addnewrating';
 import UpdateRating from './updaterating';
 import ViewRating from './viewrating';
+import Filters from './searchfilterratings'; 
 
 function App() {
   const [user, setUser] = useState(""); // To store the logged-in user
   const [loggedIn, setLoggedIn] = useState(false);
+  const [ratingDataChanged, setRatingDataChanged] = useState(false);
 
   useEffect(() => {
     // Check if the user is logged in
@@ -26,6 +28,10 @@ function App() {
     localStorage.removeItem("user");
     setUser(""); // Clear the user state
     setLoggedIn(false); // Update the login status
+  };
+
+  const refreshRatingsData = () => {
+    setRatingDataChanged(!ratingDataChanged);
   };
 
   return (
@@ -57,7 +63,8 @@ function App() {
         <div className="app-container">
           <div className="main-content">
             <Routes>
-              <Route path="/ratingstable" element={<Ratings />} />
+              <Route path="/ratingstable" element={<Ratings DataChanged={ratingDataChanged} />} />
+              <Route path="/searchfilterratings" element={<Filters />} /> 
             </Routes>
           </div>
           <div className="sidebar-right">
@@ -91,7 +98,7 @@ function App() {
             {loggedIn && (
               <div className="add-song-rating">
                 <strong>Add New Song Rating</strong>
-                <AddNewRating />
+                <AddNewRating onRatingAdded={refreshRatingsData}/>
               </div>
             )}
           </div>
