@@ -9,6 +9,7 @@ function DeleteRating({ ratingId, onDataChanged }) {
   // const [id, setId] = useState("");
   const [message, setMessage] = useState("");
   //const navigate = useNavigate();
+  const [showForm, setShowForm] = useState(true);
  
   let handleSubmit = async (e) => {
   //   setUsername(localStorage.getItem("user"));
@@ -44,6 +45,11 @@ function DeleteRating({ ratingId, onDataChanged }) {
     }
   };
 
+  const handleCancel = () => {
+    // Hide the form when the Cancel button is clicked
+    setShowForm(false);
+  };
+
   return (
     <div className="DeleteRating">
       {/* <form onSubmit={handleSubmit}>
@@ -57,11 +63,14 @@ function DeleteRating({ ratingId, onDataChanged }) {
 
         <div className="message">{message ? <p>{message}</p> : null}</div>
       </form> */}
-      <p>Are you sure you want to delete this rating?</p>
-      <button onClick={handleSubmit}>Delete</button>
-      <button onClick={() => setMessage("")}>Cancel</button>
-
-      <div className="message">{message ? <p>{message}</p> : null}</div>
+      {showForm ? (
+        <>
+          <p>Are you sure you want to delete this rating?</p>
+          <button onClick={handleSubmit}>Delete</button>
+          <button onClick={handleCancel}>Cancel</button>
+          <div className="message">{message ? <p>{message}</p> : null}</div>
+        </>
+      ) : null}
     </div>
   );
   }
