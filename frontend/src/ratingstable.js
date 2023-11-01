@@ -3,6 +3,8 @@ import UpdateRating from './updaterating';
 import DeleteRating from './deleterating';
 import './Ratings.css';
 import AddNewRating from './addnewrating';
+import GetRatingData from './searchfilterratings'; 
+
 
 function Ratings(props) {
   // State to hold the ratings data
@@ -100,6 +102,7 @@ function Ratings(props) {
   return (
     <div className="RatingsTable">
       <h1>Welcome! <br/> This is {user}'s Rating Table</h1>
+      <GetRatingData/>
       <ul>
         {ratings.map((rating) => (
           <div className="ratings-preview" key={rating.id}>
