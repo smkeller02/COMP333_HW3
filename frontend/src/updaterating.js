@@ -33,9 +33,9 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
         if (data.error) {
           setMessage(data.error);
         } else {
-        setArtist(data.artist);
-        setSong(data.song);
-        setRating(data.rating);
+        setArtist(data[0].artist);
+        setSong(data[0].song);
+        setRating(data[0].rating);
         }
       })
       .catch((error) => {
@@ -77,9 +77,9 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
       if (res.status === 200) {
         // setId("");
         //setUsername("");
-        setArtist("");
-        setSong("");
-        setRating("");
+        // setArtist("");
+        // setSong("");
+        // setRating("");
         setMessage("Rating updated");
         onDataChanged();
         setDataChanged(true);
