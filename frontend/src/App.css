@@ -40,16 +40,37 @@
 
 .app-container {
   display: flex;
+  justify-content: space-between;
 }
 
 .main-content {
   flex: 1; 
   padding: 20px;
-  background-color: #7171d6;
+  background-color: #acaceb;
 }
 
 .sidebar-right {
   width: 20%; 
   padding: 20px; 
   background-color: #f0f0f0; 
+}
+
+.exit-button {
+  margin-bottom: 20px; 
+}
+
+.login_signin{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+.login, .signin {
+  margin-bottom: 20px; 
+  color: black; 
+  border: none; 
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px; 
 }

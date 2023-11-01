@@ -1,12 +1,26 @@
-.update-icon, .delete-icon {
-  cursor: pointer; /* Make the icons look clickable */
-  margin-left: 10px; /* Add some spacing between the icons and the song information */
-  color: #007BFF; /* Color for the Update icon */
+.update-icon, .delete-button {
+  padding: 5px 10px;
+  background-color: #e75d07;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
 
-.delete-icon {
-  color: #FF0000; /* Color for the Delete icon */
+.icon-button {
+  display: inline-block; 
+  margin-right: 10px; 
+  cursor: pointer;
 }
+
+.button-container {
+  gap: 10px;
+}
+
+.button-container-icon {
+  display: flex;
+  gap: 2px;
+}
+
 
 /* CSS for the star icons (You can customize this as well) */
 .star-filled {
@@ -23,3 +37,34 @@
   margin: 0 auto;
   padding: 20px;
 }  
+
+.filters-container {
+  margin: 20px;
+}
+
+.search-bar {
+  margin-bottom: 10px;
+}
+
+.filter-options {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.filter-options input {
+  margin-right: 10px;
+  padding: 5px;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
