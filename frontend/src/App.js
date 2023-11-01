@@ -88,7 +88,7 @@ function App() {
                 </div>
 
                 <div className="signin">
-                  <strong>Sign In</strong>
+                  <strong>Sign Up</strong>
                   {/* Render the "Sign Up" component if the user is not signed in */}
                   {!loggedIn && (
                     <CreateUser />
