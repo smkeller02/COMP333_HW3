@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function LoginUser() {
+function LoginUser({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -27,6 +27,7 @@ function LoginUser() {
         setPassword("");
         // Locally store username to use throughout frontend
         localStorage.setItem("user", username);
+        onLoginSuccess();
         // Redirect user to ratings page
         navigate("/ratingstable");
       } else if (res.status === 400) {
