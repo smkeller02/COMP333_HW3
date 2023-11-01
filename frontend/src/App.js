@@ -63,45 +63,49 @@ function App() {
         <div className="app-container">
           <div className="main-content">
             <Routes>
-              <Route path="/ratingstable" element={<Ratings DataChanged={ratingDataChanged} />} />
-              <Route path="/searchfilterratings" element={<Filters />} /> 
+              {loggedIn &&
+              (
+                <Route path="/ratingstable" element={<Ratings DataChanged={ratingDataChanged} />} />
+              )
+              }
+              <Route path="/searchfilterratings" element={<Filters />} />
             </Routes>
-          </div>
-          <div className="sidebar-right">
-          {!loggedIn && (
-            <div className="login_signin">
-              <div className="login">
-                <strong>Log In</strong>
-                {/* Render the "Login" button if the user is not logged in */}
-                {!loggedIn && (
-                  <LoginUser />
-                )}
-              </div>
+        </div>
 
-              <div className="signin">
-                <strong>Sign In</strong>
-                {/* Render the "Sign Up" component if the user is not signed in */}
-                {!loggedIn && (
-                  <CreateUser />
-                )}
+        <div className="sidebar-right">
+          {!loggedIn && (
+              <div className="login_signin">
+                <div className="login">
+                  <strong>Log In</strong>
+                  {/* Render the "Login" button if the user is not logged in */}
+                  {!loggedIn && (
+                    <LoginUser />
+                  )}
+                </div>
+
+                <div className="signin">
+                  <strong>Sign In</strong>
+                  {/* Render the "Sign Up" component if the user is not signed in */}
+                  {!loggedIn && (
+                    <CreateUser />
+                  )}
+                </div>
               </div>
-            </div>
+            )}
+            {loggedIn && (
+            <button className="exit-button" onClick={handleLogout}>
+              Logout
+            </button>
           )}
 
-            {/* Render the "Exit" button if a user is logged in */}
-            {loggedIn && (
-              <button className="exit-button" onClick={handleLogout}>
-                Logout
-              </button>
-            )}
-
-            {loggedIn && (
-              <div className="add-song-rating">
-                <strong>Add New Song Rating</strong>
-                <AddNewRating onRatingAdded={refreshRatingsData}/>
-              </div>
-            )}
-          </div>
+          {loggedIn && (
+            <div className="add-song-rating">
+              <strong>Add New Song Rating</strong>
+              <AddNewRating onRatingAdded={refreshRatingsData}/>
+            </div>
+          )}
+        </div>
+          
       </div>
 
         <hr />
