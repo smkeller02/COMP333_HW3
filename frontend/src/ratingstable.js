@@ -8,10 +8,10 @@ import GetRatingData from './searchfilterratings';
 
 function Ratings(props) {
   // State to hold the ratings data
-  const [ratings, setRatings] = useState("");
+  const [ratings, setRatings] = useState([]);
   const user = localStorage.getItem("user");
   const [q, setQ] = useState(""); // Search query
-  const [filterParam, setFilterParam] = useState(""); // Filter parameter
+  const [filterParam, setFilterParam] = useState('All'); // Filter parameter
 
   // State to track which rating should be updated or deleted
   const [updateRating, setUpdateRating] = useState(null);
@@ -156,18 +156,18 @@ function Ratings(props) {
   const filterItems = () => {
     // Filter the items based on the search query and filter parameter
     return ratings.filter((rating) => {
-      const searchTerms = q.toLowerCase().trim();
+      const searchTerms = q?.toLowerCase().trim();
       if (filterParam === "All") {
         return (
           searchTerms === "" ||
-          rating.username.toLowerCase().includes(searchTerms) ||
-          rating.artist.toLowerCase().includes(searchTerms) ||
-          rating.song.toLowerCase().includes(searchTerms) ||
-          rating.rating.toString().includes(searchTerms)
+          rating.username?.toLowerCase().includes(searchTerms) ||
+          rating.artist?.toLowerCase().includes(searchTerms) ||
+          rating.song?.toLowerCase().includes(searchTerms) ||
+          rating.rating?.toString().includes(searchTerms)
         );
       } else {
-        const filterProperty = filterParam.toLowerCase();
-        return rating[filterProperty].toLowerCase().includes(searchTerms);
+        const filterProperty = filterParam?.toLowerCase();
+        return rating[filterProperty]?.toLowerCase().includes(searchTerms);
       }
     });
   };
