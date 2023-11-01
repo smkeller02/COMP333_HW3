@@ -71,9 +71,13 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
     }
   };
 
+  const handleUpdateClick = () => {
+    setDataChanged(false); // Set dataChanged to false to show the form again
+  };
+
   return (
     <div className="UpdateRating">
-      {!dataChanged && (
+      {!dataChanged ? (
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -98,6 +102,8 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
 
           <div className="message">{message ? <p>{message}</p> : null}</div>
         </form>
+      ) : (
+        <button onClick={handleUpdateClick}>Update</button>
       )}
     </div>
   );
