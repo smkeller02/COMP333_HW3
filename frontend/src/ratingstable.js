@@ -99,8 +99,7 @@ function Ratings(props) {
 
   return (
     <div className="RatingsTable">
-      <h1>Ratings</h1>
-      <p>Welcome, {user}</p>
+      <h1>Welcome! <br/> {user}'s Rating Table</h1>
       <ul>
         {ratings.map((rating) => (
           <div className="ratings-preview" key={rating.id}>
@@ -128,6 +127,7 @@ function Ratings(props) {
             {deleteRating && deleteRating.id === rating.id && (
               <DeleteRating ratingId={deleteRating.id} onDelete={() => handleDelete(rating) } onDataChanged={handleDataChange} />
             )}
+            <hr/>
           </div>
         ))}
       </ul> 
