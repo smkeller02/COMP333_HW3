@@ -12,9 +12,19 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
   const [song, setSong] = useState("");
   const [rating, setRating] = useState("");
   const [message, setMessage] = useState("");
+  const [dataChanged, setDataChanged] = useState(false);
   //const navigate = useNavigate();
 
   const navigate = useNavigate();
+
+  const handleCancel = () => {
+    // Hide the form and reset form fields when the cancel button is clicked
+    setArtist("");
+    setSong("");
+    setRating("");
+    setMessage("");
+    setDataChanged(true);
+  };
  
   let handleSubmit = async (e) => {
    // setUsername(localStorage.getItem("user"));
@@ -45,7 +55,10 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
         setRating("");
         setMessage("Rating updated");
         onDataChanged();
+        setDataChanged(true);
+        // setShowForm(false);
         // Redirect user to ratings page
+        setTimeout(() => setMessage(""), 2000);
         navigate("/ratingstable"); 
       } else if (res.status === 400) {
           // Access the error message from backend
@@ -60,29 +73,32 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
 
   return (
     <div className="UpdateRating">
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={artist}
-          placeholder="Artist"
-          onChange={(e) => setArtist(e.target.value)}
-        />
-         <input
-          type="text"
-          value={song}
-          placeholder="Song"
-          onChange={(e) => setSong(e.target.value)}
-        /> 
-        <input
-        type="text"
-        value={rating}
-        placeholder="Rating"
-        onChange={(e) => setRating(e.target.value)}
-      />
-        <button type="submit">Update rating</button>
+      {!dataChanged && (
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={artist}
+            placeholder="Artist"
+            onChange={(e) => setArtist(e.target.value)}
+          />
+          <input
+            type="text"
+            value={song}
+            placeholder="Song"
+            onChange={(e) => setSong(e.target.value)}
+          />
+          <input
+            type="text"
+            value={rating}
+            placeholder="Rating"
+            onChange={(e) => setRating(e.target.value)}
+          />
+          <button type="submit">Update rating</button>
+          <button type="button" onClick={handleCancel}>Cancel</button>
 
-        <div className="message">{message ? <p>{message}</p> : null}</div>
-      </form>
+          <div className="message">{message ? <p>{message}</p> : null}</div>
+        </form>
+      )}
     </div>
   );
 }
