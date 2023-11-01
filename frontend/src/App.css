@@ -22,6 +22,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  height: 100%;
 }
 
 .App-link {
@@ -41,6 +42,7 @@
 .app-container {
   display: flex;
   justify-content: space-between;
+  min-height: 100vh;
 }
 
 .main-content {
@@ -73,4 +75,44 @@
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px; 
+}
+
+.login-signup-center {
+  background-color: #f0f0f0;
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-signup-center .big {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.login-signup-center strong {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.login-signup-center .login,
+.login-signup-center .create-user {
+  background-color: #0074e4;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-signup-center .login:hover,
+.login-signup-center .create-user:hover {
+  background-color: #0054b7;
 }
