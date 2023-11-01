@@ -34,6 +34,10 @@ function App() {
     setRatingDataChanged(!ratingDataChanged);
   };
 
+  const handleLoginSuccess = () => {
+    setLoggedIn(true); // Set the login status to true
+  };
+
   return (
     <Router>
       <div>
@@ -79,7 +83,7 @@ function App() {
                   <strong>Log In</strong>
                   {/* Render the "Login" button if the user is not logged in */}
                   {!loggedIn && (
-                    <LoginUser />
+                    <LoginUser onLoginSuccess={handleLoginSuccess}/>
                   )}
                 </div>
 
