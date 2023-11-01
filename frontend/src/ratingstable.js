@@ -16,6 +16,7 @@ function Ratings(props) {
 
   const handleDataChange = (props) => {
     setDataChanged(!dataChanged); 
+    setUpdateRating(null);
   };
 
   // Fetch ratings data from the API
@@ -109,7 +110,7 @@ function Ratings(props) {
             {isSongCreatedByUser(rating) && (
               <div>
                 {updateRating && updateRating.id === rating.id && updateRating.username === rating.username ? (
-                  <UpdateRating ratingId={updateRating.id} user={updateRating.username} onDataChanged={handleCancelUpdate} isUpdateMode={true} />
+                  <UpdateRating ratingId={updateRating.id} user={updateRating.username} onDataChanged={handleDataChange} isUpdateMode={true} />
                 ) : (
                   <button onClick={() => handleUpdate(rating)}>Update</button>
                 )}
