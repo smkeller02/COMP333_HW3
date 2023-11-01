@@ -97,7 +97,7 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
             placeholder="Rating"
             onChange={(e) => setRating(e.target.value)}
           />
-          <button type="submit">Update rating</button>
+          <button type="submit" onClick={handleSubmit}>Update rating</button>
           <button type="button" onClick={handleCancel}>Cancel</button>
 
           <div className="message">{message ? <p>{message}</p> : null}</div>
