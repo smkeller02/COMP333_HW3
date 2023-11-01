@@ -108,14 +108,17 @@ function Ratings(props) {
             <p>{renderStars(rating.rating)}</p>
             <p>rated by: {rating.username}</p>
             {isSongCreatedByUser(rating) && (
-              <div>
+              <div className="button-container">
                 {updateRating && updateRating.id === rating.id && updateRating.username === rating.username ? (
                   <UpdateRating ratingId={updateRating.id} user={updateRating.username} onDataChanged={handleDataChange} isUpdateMode={true} />
                 ) : (
-                  <button onClick={() => handleUpdate(rating)}>Update</button>
+                  // <button onClick={() => handleUpdate(rating)}>Update</button>
+                  <span onClick={() => handleUpdate(rating)} className="icon-button">
+                    <i className="fas fa-pencil-alt"></i> {/* Pencil icon for Update */}
+                  </span>
                 )}
-                <span onClick={() => handleDelete(rating)} className="delete-button">
-                  Delete
+                <span onClick={() => handleDelete(rating)} className="icon-button">
+                  <i className="fas fa-trash-alt"></i> {/* Trashcan icon for Delete */}
                 </span>
               </div>
             )}
