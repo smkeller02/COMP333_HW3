@@ -40,7 +40,6 @@ function App() {
 
   return (
     <Router>
-      <div>
         {/* <ul>
           <li>
             <Link to="/ratingstable">Ratings</Link>
@@ -65,54 +64,42 @@ function App() {
           </li>
         </ul> */}
         <div className="app-container">
+        {(!loggedIn && (
+          <div className="login-signup-center">
+            <strong className="big">Welcome to MusicUnited</strong>
+            <br/><br/>
+            <strong>Sign up / Log in to view the ratings!</strong>
+            <br/><br/>
+            <div className="login-signup">
+              <LoginUser onLoginSuccess={handleLoginSuccess} />
+              <CreateUser />
+            </div>
+          </div>
+        ))}
+
+        {loggedIn && (
           <div className="main-content">
             <Routes>
-              {loggedIn &&
-              (
-                <Route path="/ratingstable" element={<Ratings DataChanged={ratingDataChanged} />} />
-              )
-              }
-              <Route path="/searchfilterratings" element={<Filters />} />
+              <Route path="/ratingstable" element={<Ratings DataChanged={ratingDataChanged} />} />
+              <Route path="/addnewrating" element={<AddNewRating onRatingAdded={refreshRatingsData} />} />
             </Routes>
-        </div>
+          </div>
+        )}
 
-        <div className="sidebar-right">
-          {!loggedIn && (
-              <div className="login_signin">
-                <div className="login">
-                  <strong>Log In</strong>
-                  {/* Render the "Login" button if the user is not logged in */}
-                  {!loggedIn && (
-                    <LoginUser onLoginSuccess={handleLoginSuccess}/>
-                  )}
-                </div>
-
-                <div className="signin">
-                  <strong>Sign Up</strong>
-                  {/* Render the "Sign Up" component if the user is not signed in */}
-                  {!loggedIn && (
-                    <CreateUser />
-                  )}
-                </div>
-              </div>
-            )}
-            {loggedIn && (
+        {loggedIn && (
+          <div className="sidebar-right">
             <button className="exit-button" onClick={handleLogout}>
               Logout
             </button>
-          )}
-
-          {loggedIn && (
             <div className="add-song-rating">
               <strong>Add New Song Rating</strong>
-              <AddNewRating onRatingAdded={refreshRatingsData}/>
+              <AddNewRating onRatingAdded={refreshRatingsData} />
             </div>
-          )}
-        </div>
-          
+          </div>
+        )}
       </div>
 
-        <hr />
+        {/* <hr /> */}
 
         {/* <Routes>
           <Route path="/ratingstable" element={<Ratings />} />
@@ -123,7 +110,6 @@ function App() {
           <Route path="/loginuser" element={<LoginUser />} />
           <Route path="/createuser" element={<CreateUser />} />
         </Routes> */}
-      </div>
     </Router>
   );
 }
