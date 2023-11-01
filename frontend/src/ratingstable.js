@@ -10,6 +10,8 @@ function Ratings(props) {
   // State to hold the ratings data
   const [ratings, setRatings] = useState("");
   const user = localStorage.getItem("user");
+  const [q, setQ] = useState(""); // Search query
+  const [filterParam, setFilterParam] = useState(""); // Filter parameter
 
   // State to track which rating should be updated or deleted
   const [updateRating, setUpdateRating] = useState(null);
@@ -151,13 +153,59 @@ function Ratings(props) {
     );
   }
 
+  const filterItems = () => {
+    // Filter the items based on the search query and filter parameter
+    return ratings.filter((rating) => {
+      const searchTerms = q.toLowerCase().trim();
+      if (filterParam === "All") {
+        return (
+          searchTerms === "" ||
+          rating.username.toLowerCase().includes(searchTerms) ||
+          rating.artist.toLowerCase().includes(searchTerms) ||
+          rating.song.toLowerCase().includes(searchTerms) ||
+          rating.rating.toString().includes(searchTerms)
+        );
+      } else {
+        const filterProperty = filterParam.toLowerCase();
+        return rating[filterProperty].toLowerCase().includes(searchTerms);
+      }
+    });
+  };
+
 
   return (
     <div className="RatingsTable">
       <h1>Welcome! <br/> This is {user}'s Rating Table</h1>
-      <GetRatingData/>
+      <div className="search-wrapper">
+        <label htmlFor="search-form">
+          <input
+            type="search"
+            name="search-form"
+            id="search-form"
+            className="search-input"
+            placeholder="Search for..."
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
+          <span className="sr-only">Search ratings here</span>
+        </label>
+        <div className="select">
+          <select
+            onChange={(e) => setFilterParam(e.target.value)}
+            className="custom-select"
+            aria-label="Filter Ratings By..."
+          >
+            <option value="All">No Filter</option>
+            <option value="username">User</option>
+            <option value="artist">Artist</option>
+            <option value="song">Song</option>
+            <option value="rating">Rating</option>
+          </select>
+          <span className="focus"></span>
+        </div>
+      </div>
       <ul>
-        {ratings.map((rating) => (
+        {filterItems().map((rating) => (
           <div className="ratings-preview" key={rating.id}>
             <strong>{rating.song}</strong> by {rating.artist}
             <p>{renderStars(rating.rating)}</p>
