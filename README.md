@@ -63,18 +63,19 @@ alt="Screenshot of ratings_table"
 Note: assuming you have homebrew and node.js installed
  <!-- break -->
 6. cd into your frontend folder on desktop (or wherever you put it) which holds the react app and run 'npm start'
-7. In your browser at http://localhost:3000/loginuser you should now the react app running and see the login form
+7. In your browser at http://localhost:3000/ratingstable you should now the react app running and see the login form
 
 
 # How to run the code:
 Locally in a browser using XAMPP localhost URL (need to have the proper mySQL databases set up)</br>
-You also need to have your react-app front end folder running</br>
-The URL to login http://localhost:3000/loginuser
+You also need to have your react-app front end folder running (discussed in the "Setting up developement environment" section - run 'npm start' in frontend folder)</br>
+
+The URL you will be taken to after running 'npm start': http://localhost:3000/ratingstable
 
 
 # Folders and Files:
 ## Rest API/Model, View, Controller Architecture:
-index.php: the entry-point of our application, front-controller of application.</br>
+index.php: the entry-point of our application, front-controller of application. index.php connects to UserController.php for all interactions with database</br>
 inc:
  - config.php: holds the configuration information of application, holds the database credentials. 
  - bootstrap.php: used to bootstrap  application by including the necessary files
@@ -85,7 +86,7 @@ Model:
 <!-- end of the list -->
 Controller/Api:
 - BaseController.php: a base controller file which holds common utility methods.
-- UserController.php: the User controller file which holds the necessary application code to entertain REST API calls.
+- UserController.php: the User controller file which holds the necessary application code to entertain REST API calls. Creates a user, logs a user in, gets data from ratings table for user, deletes, adds, and updates ratings for user.
 <!-- end of the list -->
 Checkout this tutorial for how more details on how we set up our REST API:
 https://code.tutsplus.com/how-to-build-a-simple-rest-api-in-php--cms-37000t
@@ -107,12 +108,13 @@ frontend (again, this folder should be moved out of htdocs folder to somewhere e
     - setupTests.js - file to include test configuration (comes with react app)
     - createuser.js - component that connects with backend to create a new user and log them in
     - loginuser.js - component that connects with backend to log user in
-    - ratingstable.js - component that displays all ratings data in ratings datatable
+    - ratingstable.js - component that displays all ratings data in ratings datatable. Also implements search/filter functionality taken from searchfilterratings.js component and deals with updates/deletes and user checks.
     - deleterating.js - component that connects with backend to delete a given rating selected by user on frontend
     - addnewrating.js - component that connects with backend to add a new rating to the datatable
     - updaterating.js - component that connects with backend to update a given rating selected by user on frontend
     - viewrating.js - component that lets a user view a single rating
     - searchfilerratings.js - component for search and filtering ratings datatable
+    - Ratings.css - ratingstable.js style sheet
 
 ## Other files:
 Images:
@@ -155,3 +157,8 @@ https://stackoverflow.com/questions/61517408/how-i-can-use-php-session-in-react 
 https://stackoverflow.com/questions/676846/do-ajax-requests-retain-php-session-info - integrating PHP sessions to react</br>
 https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem - store username locally</br>
 https://www.freecodecamp.org/news/search-and-filter-component-in-reactjs/ - search feature</br>
+https://www.w3schools.com/REACT/react_forms.asp - understanding forms for submission</br>
+https://www.w3schools.com/REACT/react_usestate.asp - useState hook for frontend</br>
+https://www.w3schools.com/REACT/react_useeffect.asp - useEffect use in working with / updating</br> data
+https://www.w3schools.com/REACT/react_props.asp - props</br>
+https://www.w3schools.com/REACT/react_events.asp - events</br>
