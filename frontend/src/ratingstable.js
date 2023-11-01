@@ -108,17 +108,19 @@ function Ratings(props) {
             <p>rated by: {rating.username}</p>
             {isSongCreatedByUser(rating) && (
               <div>
-                <span onClick={() => handleUpdate(rating)} className="update-icon">
-                  Update
-                </span>
-                <span onClick={() => handleDelete(rating)} className="delete-icon">
+                {updateRating && updateRating.id === rating.id && updateRating.username === rating.username ? (
+                  <UpdateRating ratingId={updateRating.id} user={updateRating.username} onDataChanged={handleCancelUpdate} isUpdateMode={true} />
+                ) : (
+                  <button onClick={() => handleUpdate(rating)}>Update</button>
+                )}
+                <span onClick={() => handleDelete(rating)} className="delete-button">
                   Delete
                 </span>
               </div>
             )}
-            {updateRating && updateRating.id === rating.id && updateRating.username === rating.username && (
+            {/* {updateRating && updateRating.id === rating.id && updateRating.username === rating.username && (
               <UpdateRating ratingId={updateRating.id} user={updateRating.username} onDataChanged={handleDataChange}/>
-            )}
+            )} */}
             {deleteRating && deleteRating.id === rating.id && (
               <DeleteRating ratingId={deleteRating.id} onDelete={() => handleDelete(rating) } onDataChanged={handleDataChange} />
             )}
