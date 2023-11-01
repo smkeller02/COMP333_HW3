@@ -29,6 +29,11 @@ function CreateUser() {
       if (res.status === 200) {
         console.log("ok signup");
         // Locally store username to use throughout frontend
+        setMessage("Sign up successfull! Now, Log in :) ");
+        setUsername("");
+        setPassword("");
+        setPassword2("");
+        setTimeout(() => setMessage(""), 4000);
         localStorage.setItem("user", username);
         // Redirect user to ratings page
         navigate("/ratingstable");
