@@ -91,7 +91,7 @@ function App() {
             {/* Render the "Exit" button if a user is logged in */}
             {loggedIn && (
               <button className="exit-button" onClick={handleLogout}>
-                Exit
+                Logout
               </button>
             )}
 
