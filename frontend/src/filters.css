@@ -1,0 +1,30 @@
+.filters-container {
+    margin: 20px;
+  }
+  
+  .search-bar {
+    margin-bottom: 10px;
+  }
+  
+  .filter-options {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .filter-options input {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
