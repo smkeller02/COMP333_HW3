@@ -99,6 +99,59 @@ function Ratings(props) {
     );
   };
 
+  function TopRatedSongs({ ratings }) {
+    // Sort the ratings in descending order based on the star rating value (select the top five)
+    const topRatedSongs = [...ratings].sort((a, b) => b.rating - a.rating).slice(0, 5);
+  
+    return (
+      <div>
+        <h2>Top Rated Songs</h2>
+        <ul>
+          {topRatedSongs.map((song) => (
+            <li key={song.id}>{song.song} by {song.artist} - Rating: {song.rating}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+  
+  function AverageSongRatings({ ratings }) {
+    // calculate total rating and the number of ratings
+    const totalRatings = ratings.length;
+    const totalRatingValue = ratings.reduce((sum, rating) => sum + rating.rating, 0);
+    // in edge case, where there is no rating
+    const averageRating = totalRatings > 0 ? (totalRatingValue / totalRatings).toFixed(2) : 0;
+  
+    return (
+      <div>
+        <h2>Average Song Ratings</h2>
+        <p>Average Rating: {averageRating}</p>
+      </div>
+    );
+  }
+
+  function SongsPerArtist({ ratings }) {
+    const artistCounts = {};
+    // Iterate through the ratings to count the songs per artist.
+    ratings.forEach((rating) => {
+      artistCounts[rating.artist] = (artistCounts[rating.artist] || 0) + 1;
+    });
+  
+    return (
+      <div>
+        <h2>Number of Songs per Artist</h2>
+        <ul>
+          {Object.entries(artistCounts).map(([artist, count]) => (
+            <li key={artist}>
+              {artist}: {count} {count === 1 ? 'song' : 'songs'} {/* song if 1, songs if more than 1*/}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+
   return (
     <div className="RatingsTable">
       <h1>Welcome! <br/> This is {user}'s Rating Table</h1>
@@ -134,6 +187,11 @@ function Ratings(props) {
           </div>
         ))}
       </ul> 
+
+      {/* Statistics Components */}
+      <TopRatedSongs ratings={ratings} />
+      <AverageSongRatings ratings={ratings} />
+      <SongsPerArtist ratings={ratings} />
     </div>
   )
 }
