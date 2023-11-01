@@ -99,7 +99,7 @@ function Ratings(props) {
 
   return (
     <div className="RatingsTable">
-      <h1>Welcome! <br/> {user}'s Rating Table</h1>
+      <h1>Welcome! <br/> This is {user}'s Rating Table</h1>
       <ul>
         {ratings.map((rating) => (
           <div className="ratings-preview" key={rating.id}>
