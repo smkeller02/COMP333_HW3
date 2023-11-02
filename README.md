@@ -63,14 +63,14 @@ alt="Screenshot of ratings_table"
 Note: assuming you have homebrew and node.js installed
  <!-- break -->
 6. cd into your frontend folder on desktop (or wherever you put it) which holds the react app and run 'npm start'
-7. In your browser at http://localhost:3000/ratingstable you should now the react app running and see the login form
+7. In your browser at http://localhost:3000 you should now the react app running and see the login form
 
 
 # How to run the code:
 Locally in a browser using XAMPP localhost URL (need to have the proper mySQL databases set up)</br>
 You also need to have your react-app front end folder running (discussed in the "Setting up developement environment" section - run 'npm start' in frontend folder)</br>
 
-The URL you will be taken to after running 'npm start': http://localhost:3000/ratingstable
+The URL you will be taken to after running 'npm start': http://localhost:3000
 
 
 # Folders and Files:

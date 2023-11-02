@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Redirect } from "react-router-dom";
 import './App.css';
 import Ratings from './ratingstable';
 import LoginUser from './loginuser';
@@ -49,7 +49,7 @@ function App() {
             <br/><br/>
             <div className="login-signup">
               <LoginUser onLoginSuccess={handleLoginSuccess} /> {/* Display login form */}
-              <CreateUser onLoginSuccess={handleLoginSuccess} /> {/* Display user registration form */}
+              <CreateUser onCreateSuccess={handleLoginSuccess} /> {/* Display user registration form */}
             </div>
           </div>
         ))}
@@ -58,6 +58,7 @@ function App() {
           // Display the main content if logged in
           <div className="main-content">
             <Routes>
+            <Route path="/" element={ <Ratings DataChanged={ratingDataChanged} /> } />
               {/* Render Ratings component with prop indicating data changes */}
               <Route path="/ratingstable" element={<Ratings DataChanged={ratingDataChanged} />} />
               {/* Render AddNewRating component with callback for rating addition */}

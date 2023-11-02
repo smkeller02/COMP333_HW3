@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function CreateUser({ onLoginSuccess }) {
+function CreateUser({ onCreateSuccess }) {
   // State variables to manage user input and messages
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +36,7 @@ function CreateUser({ onLoginSuccess }) {
         setPassword("");
         setPassword2("");
         setTimeout(() => setMessage(""), 4000); // Clear the success message after 4 seconds
-        onLoginSuccess();
+        onCreateSuccess();
       } else if (res.status === 400) {
         // If bad response, access the error message from backend
         setMessage(resJson.error);
