@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from "react";
-//import { useNavigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 
 function UpdateRating({ ratingId, user, onDataChanged}) {
-  //NOTE: USER SHOULD NOT PUT IN ID, THAT SHOULD BE SENT TO BACKEND WHEN USER CLICKS - for now though, this is just a proof of concept
-  // Values for update should auto fill with rating user clicked to update
-  // const [id, setId] = useState("");
-  //const [username, setUsername] = useState("");
+  // State variables for artist, song, rating, and message
   const [artist, setArtist] = useState("");
   const [song, setSong] = useState("");
   const [rating, setRating] = useState("");
   const [message, setMessage] = useState("");
+  // State variable to control the visibility of the update form
   const [dataChanged, setDataChanged] = useState(false);
-  //const navigate = useNavigate();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch the existing rating data for the given ratingId
@@ -53,10 +46,11 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
     setDataChanged(true);
   };
  
+  // Handles submission of form
   let handleSubmit = async (e) => {
-   // setUsername(localStorage.getItem("user"));
     e.preventDefault();
     try {
+      // Send a POST request to the server for updating rating
       let res = await fetch("http://localhost/COMP333_HW3/index.php/updaterating", {
         method: "POST",
         body: JSON.stringify({
@@ -71,26 +65,17 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
         }
       });
       let resJson = await res.json();
-      console.log(user)
-      console.log(ratingId)
-      console.log(artist)
       if (res.status === 200) {
-        // setId("");
-        //setUsername("");
-        // setArtist("");
-        // setSong("");
-        // setRating("");
+        // If ok response, set sucess message
         setMessage("Rating updated");
-        onDataChanged();
-        setDataChanged(true);
-        // setShowForm(false);
-        // Redirect user to ratings page
-        setTimeout(() => setMessage(""), 2000);
-        navigate("/ratingstable"); 
+        onDataChanged(); // Trigger the parent component to refresh the data
+        setDataChanged(true); // Set the dataChanged state to true to hide form
+        setTimeout(() => setMessage(""), 2000); //Clear the success message after 2 seconds
       } else if (res.status === 400) {
-          // Access the error message from backend
+          // If bad response, access the error message from backend
           setMessage(resJson.error);
       } else {
+        // If other error, give generic message
         setMessage("Something went wrong");
       }
     } catch (err) {
@@ -98,6 +83,7 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
     }
   };
 
+  // Handles clicking update botton to show form
   const handleUpdateClick = () => {
     setDataChanged(false); // Set dataChanged to false to show the form again
   };
@@ -110,30 +96,27 @@ function UpdateRating({ ratingId, user, onDataChanged}) {
           <input
             type="text"
             value={artist}
-            // placeholder="Artist"
-            onChange={(e) => setArtist(e.target.value)}
+            onChange={(e) => setArtist(e.target.value)} // Set artist to input
           />
           <input
             type="text"
             value={song}
-            placeholder="Song"
-            onChange={(e) => setSong(e.target.value)}
+            onChange={(e) => setSong(e.target.value)} // Set song to input
           />
           <input
             type="text"
             value={rating}
-            placeholder="Rating"
-            onChange={(e) => setRating(e.target.value)}
+            onChange={(e) => setRating(e.target.value)} // Set rating to user input
           />
           <div className="button-container-icon">
             <button type="submit">Update rating</button>
             <button type="button" onClick={handleCancel}>Cancel</button>
           </div>
 
+          {/* Display success or error message if present */}
           <div className="message">{message ? <p>{message}</p> : null}</div>
         </form>
       ) : (
-        // <button onClick={handleUpdateClick}>Update</button>
         <span onClick={handleUpdateClick} className="icon-button">
             <i className="fas fa-pencil-alt"></i> {/* Pencil icon for Update */}
         </span>

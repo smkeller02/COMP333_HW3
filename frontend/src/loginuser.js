@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 function LoginUser({ onLoginSuccess }) {
+    // State variables to manage user input and messages
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
  
+  // Handles form submission
   let handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Send a POST request to the server for user login
       let res = await fetch("http://localhost/COMP333_HW3/index.php/loginuser", {
         method: "POST",
         body: JSON.stringify({
@@ -22,18 +23,19 @@ function LoginUser({ onLoginSuccess }) {
       });
       let resJson = await res.json();
       if (res.status === 200) {
+        // If ok response, set sucess message, clear username/password, locally store username, and invoke callback function for successful login
         setMessage("Login successfull!");
         setUsername("");
         setPassword("");
         // Locally store username to use throughout frontend
         localStorage.setItem("user", username);
+        // Invoke callback function for successful login
         onLoginSuccess();
-        // Redirect user to ratings page
-        navigate("/ratingstable");
       } else if (res.status === 400) {
-          // Access the error message from backend
+          // If bad response, access the error message from backend
           setMessage(resJson.error);
       } else {
+        // If other error, give generic error
         setMessage("Something went wrong");
       }
     } catch (err) {
@@ -48,16 +50,17 @@ function LoginUser({ onLoginSuccess }) {
           type="text"
           value={username}
           placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)} // Set userame from user input
         />
         <input
           type="password"
           value={password}
           placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)} // Set password from user input
         />
         <button type="submit">Login</button>
 
+        {/* Display success or error message, if present */}
         <div className="message">{message ? <p>{message}</p> : null}</div>
       </form>
     </div>
