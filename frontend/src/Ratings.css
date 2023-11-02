@@ -1,3 +1,4 @@
+/* Styles for update and delete buttons */
 .update-icon, .delete-button {
   padding: 5px 10px;
   background-color: #e75d07;
@@ -6,12 +7,14 @@
   cursor: pointer;
 }
 
+/* Styles for icon buttons */
 .icon-button {
   display: inline-block; 
   margin-right: 10px; 
   cursor: pointer;
 }
 
+/* Styles for button containers */
 .button-container {
   gap: 10px;
 }
@@ -22,7 +25,7 @@
 }
 
 
-/* CSS for the star icons (You can customize this as well) */
+/* Styles for star icons */
 .star-filled {
   color: yellow;
 }
@@ -38,6 +41,7 @@
   padding: 20px;
 }  
 
+/* Styles for search/filter */
 .filters-container {
   margin: 20px;
 }
@@ -57,6 +61,7 @@
   padding: 5px;
 }
 
+/* General button styles */
 button {
   padding: 5px 10px;
   background-color: #007bff;
@@ -65,6 +70,7 @@ button {
   cursor: pointer;
 }
 
+/* Button hover effect */
 button:hover {
   background-color: #0056b3;
 }

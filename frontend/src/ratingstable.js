@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import UpdateRating from './updaterating';
 import DeleteRating from './deleterating';
-import './Ratings.css';
-import AddNewRating from './addnewrating';
-import GetRatingData from './searchfilterratings'; 
+import './Ratings.css'
 
 
 function Ratings(props) {
   // State to hold the ratings data
   const [ratings, setRatings] = useState([]);
+  // Get username from local storage
   const user = localStorage.getItem("user");
-  const [q, setQ] = useState(""); // Search query
-  const [filterParam, setFilterParam] = useState('All'); // Filter parameter
+  // Search query
+  const [q, setQ] = useState("");
+  // Filter parameter
+  const [filterParam, setFilterParam] = useState('All');
 
   // State to track which rating should be updated or deleted
   const [updateRating, setUpdateRating] = useState(null);
@@ -41,20 +42,24 @@ function Ratings(props) {
     return null;
   }
 
+  // Check if a song is created by the logged-in user
   const isSongCreatedByUser = (rating) => {
     // determine if the song is created by the logged-in user
     return user === rating.username;
   };
 
+  // Handle updating a rating
   const handleUpdate = (rating) => {
     setUpdateRating(rating);
     setDeleteRating(null);
   };
   
+  // Hangle canceling an update
   const handleCancelUpdate = () => {
     setUpdateRating(null);
   };
 
+  // Hangle delete rating
   const handleDelete = (rating) => {
     if (isSongCreatedByUser(rating)) {
       // Toggle the selected rating when the user clicks the "Delete" button
@@ -65,12 +70,12 @@ function Ratings(props) {
     }
   };
 
+  // Handle canceling a delete request
   const handleCancelDelete = () => {
     setDeleteRating(null);
   };
 
-  console.log(ratings)
-
+  // Function to render star ratings
   const renderStars = (rating) => {
     const maxRating = 5; 
 
@@ -101,6 +106,7 @@ function Ratings(props) {
     );
   };
 
+  // Component to display top-rated songs
   function TopRatedSongs({ ratings }) {
     // Sort the ratings in descending order based on the star rating value (select the top five)
     const topRatedSongs = [...ratings].sort((a, b) => b.rating - a.rating).slice(0, 5);
@@ -117,6 +123,7 @@ function Ratings(props) {
     );
   }
   
+  // Component to display average song ratings
   function AverageSongRatings({ ratings }) {
     // calculate total rating and the number of ratings
     const totalRatings = ratings.length;
@@ -132,6 +139,7 @@ function Ratings(props) {
     );
   }
 
+    // Component to display the number of songs per artist
   function SongsPerArtist({ ratings }) {
     const artistCounts = {};
     // Iterate through the ratings to count the songs per artist.
@@ -153,8 +161,8 @@ function Ratings(props) {
     );
   }
 
+  // Function to filter the items based on the search query and filter parameter
   const filterItems = () => {
-    // Filter the items based on the search query and filter parameter
     return ratings.filter((rating) => {
       const searchTerms = q?.toLowerCase().trim();
       if (filterParam === "All") {
@@ -177,6 +185,7 @@ function Ratings(props) {
     <div className="RatingsTable">
       <h1>Welcome! <br/> This is {user}'s Rating Table</h1>
       <div className="search-wrapper">
+        {/* Input field for searching ratings */}
         <label htmlFor="search-form">
           <input
             type="search"
@@ -190,11 +199,13 @@ function Ratings(props) {
           <span className="sr-only">Search ratings here</span>
         </label>
         <div className="select">
+          {/* Dropdown for filtering ratings */}
           <select
             onChange={(e) => setFilterParam(e.target.value)}
             className="custom-select"
             aria-label="Filter Ratings By..."
           >
+            {/* Filter by options */}
             <option value="All">No Filter</option>
             <option value="username">User</option>
             <option value="artist">Artist</option>
@@ -205,6 +216,7 @@ function Ratings(props) {
         </div>
       </div>
       <ul>
+        {/* Display ratings results */}
         {filterItems().map((rating) => (
           <div className="ratings-preview" key={rating.id}>
             <strong>{rating.song}</strong> by {rating.artist}
@@ -213,22 +225,22 @@ function Ratings(props) {
             {isSongCreatedByUser(rating) && (
               <div className="button-container">
                 {updateRating && updateRating.id === rating.id && updateRating.username === rating.username ? (
+                  // If in update mode, render the UpdateRating component
                   <UpdateRating ratingId={updateRating.id} user={updateRating.username} onDataChanged={handleDataChange} isUpdateMode={true} />
                 ) : (
-                  // <button onClick={() => handleUpdate(rating)}>Update</button>
+                  // Render update icon to start the update process
                   <span onClick={() => handleUpdate(rating)} className="icon-button">
                     <i className="fas fa-pencil-alt"></i> {/* Pencil icon for Update */}
                   </span>
                 )}
+                {/* Render delete icon to start the delete process */}
                 <span onClick={() => handleDelete(rating)} className="icon-button">
                   <i className="fas fa-trash-alt"></i> {/* Trashcan icon for Delete */}
                 </span>
               </div>
             )}
-            {/* {updateRating && updateRating.id === rating.id && updateRating.username === rating.username && (
-              <UpdateRating ratingId={updateRating.id} user={updateRating.username} onDataChanged={handleDataChange}/>
-            )} */}
             {deleteRating && deleteRating.id === rating.id && (
+              // If in delete mode, render the DeleteRating component
               <DeleteRating ratingId={deleteRating.id} onDelete={() => handleDelete(rating) } onDataChanged={handleDataChange} />
             )}
             <hr/>

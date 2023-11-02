@@ -1,21 +1,17 @@
 import React, { useState } from "react";
-// import { Navigate } from "react-router-dom";
 
 function DeleteRating({ ratingId, onDataChanged }) {
-  //NOTE HERE THE USER SHOULDN'T NEED TO INSERT ID, 
-  //SHOULD ONLY NEED TO CLICK ON SONG IN RATINGS TABLE AND DELETE PAGE WILL SHOW UP
-  //BACKEND DOES NEED ID TO RUN THOUGH
-  // const [username, setUsername] = useState("");
-  // const [id, setId] = useState("");
+    // State to manage the message displayed to the user
   const [message, setMessage] = useState("");
-  //const navigate = useNavigate();
+    // State to control the visibility of the delete confirmation form
   const [showForm, setShowForm] = useState(true);
  
+  // Handles form submission
   let handleSubmit = async (e) => {
-  //   setUsername(localStorage.getItem("user"));
-  //   e.preventDefault();
     try {
+      // Get the username from local storage
       const username = localStorage.getItem("user");
+      // Send a DELETE request to the server to delete the rating
       let res = await fetch("http://localhost/COMP333_HW3/index.php/deleterating", {
         method: "DELETE",
         body: JSON.stringify({
@@ -28,16 +24,14 @@ function DeleteRating({ ratingId, onDataChanged }) {
       });
       let resJson = await res.json();
       if (res.status === 200) {
-        // setUsername("");
-        // setId("");
+        // If ok response, set appropriate message and trigger the parent component to refresh the data
         setMessage("Rating Deleted");
         onDataChanged(); 
-        // Redirect user to ratings page
-        // navigate("/ratingstable");
       } else if (res.status === 400) {
-          // Access the error message from backend
+          // If bad response, access the error message from backend
           setMessage(resJson.error);
       } else {
+        // If other error, send generic message
         setMessage("Something went wrong");
       }
     } catch (err) {
@@ -45,6 +39,7 @@ function DeleteRating({ ratingId, onDataChanged }) {
     }
   };
 
+  // Handle cancellation and hide the form
   const handleCancel = () => {
     // Hide the form when the Cancel button is clicked
     setShowForm(false);
@@ -52,22 +47,12 @@ function DeleteRating({ ratingId, onDataChanged }) {
 
   return (
     <div className="DeleteRating">
-      {/* <form onSubmit={handleSubmit}>
-        <input
-          type="number"
-          value={id}
-          placeholder="Id"
-          onChange={(e) => setId(e.target.value)}
-        />
-        <button type="submit">Delete</button>
-
-        <div className="message">{message ? <p>{message}</p> : null}</div>
-      </form> */}
       {showForm ? (
         <>
           <p>Are you sure you want to delete this rating?</p>
           <button onClick={handleSubmit}>Delete</button>
           <button onClick={handleCancel}>Cancel</button>
+          {/* Display success or error message, if present */}
           <div className="message">{message ? <p>{message}</p> : null}</div>
         </>
       ) : null}
