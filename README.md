@@ -72,8 +72,8 @@ You also need to have your react-app front end folder running (discussed in the 
 
 The URL you will be taken to after running 'npm start': http://localhost:3000
 
-# How to test frontend using Jest
-1. Set up your XAMPP for your backend (run Apache - port 80 and MySQL - port 3306)
+# How to test frontend using Jest (**Problem 5 for HW5**)
+1. Set up your XAMPP for your backend - see above 'Setting up the developement environment' section (run Apache - port 80 and MySQL - port 3306)
 2. GIT clone the repository:
 3. CD into the repo and then the frontend folder
 ```
