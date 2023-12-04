@@ -72,6 +72,32 @@ You also need to have your react-app front end folder running (discussed in the 
 
 The URL you will be taken to after running 'npm start': http://localhost:3000
 
+# How to test frontend using Jest
+1. Set up your XAMPP for your backend (run Apache - port 80 and MySQL - port 3000)
+2. GIT clone the repository:
+```
+git clone git@github.com:smkeller02/COMP333_HW3.git
+```
+3. CD into your frontend folder
+```
+cd frontend
+``` 
+4. Setup Jest to install dependencies:
+```
+npm i —save-dev @testing-library/jest-dom
+npm install —save-dev jest @testing-library/react @testing-library/jest-dom
+```
+5. Run the development server:
+```
+npm test
+```
+You will see the following result:
+</br><img align ="center"
+height="32%"
+width="32%"
+src="./Images/jest.png"
+alt="Jest Unit Testing Result"
+/>
 
 # Folders and Files:
 ## Rest API/Model, View, Controller Architecture:
