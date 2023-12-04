@@ -61,13 +61,14 @@ function CreateUser({ onCreateSuccess }) {
         <input
           type="password"
           value={password}
-          placeholder="Password"
+          data-testid="password-input"
           onChange={(e) => setPassword(e.target.value)} // Set password from user input
         />
         <input
           type="password"
           value={password2}
           placeholder="Re-type Password"
+          data-testid="password2-input"
           onChange={(e) => setPassword2(e.target.value)} // Set password2 from user input
         />
 
