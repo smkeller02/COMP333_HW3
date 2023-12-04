@@ -88,7 +88,7 @@ npm install -—save-dev jest @testing-library/react @testing-library/jest-dom
 ```
 npm test
 ```
-You will see the following result:
+6. Type 'a' to run all tests and then you will see the following result:
 </br><img align ="center"
 height="32%"
 width="32%"
